@@ -14,4 +14,23 @@ mod tests {
 
         println!("{}", s);
     }
+
+    #[test]
+    fn test_redirect() {
+        let custom = reqwest::redirect::Policy::custom( |attempt| attempt.stop());
+        let client = reqwest::Client::builder().redirect(custom).build().unwrap();
+
+        let resp = crate::util::run_async(async {
+            client
+                .get("https://v.douyin.com/NNWNdq6/")
+                .send()
+                .await
+                .unwrap()
+                .text()
+                .await
+                .unwrap()
+        });
+
+        println!("resp: {}", &resp);
+    }
 }

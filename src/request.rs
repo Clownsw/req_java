@@ -18,7 +18,20 @@ pub extern "system" fn Java_cn_smilex_req_Req_req_1get(
     if !url.is_null() {
         _url = env.get_string(url).unwrap().into();
 
-        text = util::run_async(async { reqwest::get(_url).await.unwrap().text().await.unwrap() });
+        text = util::run_async(async {
+            let custom = reqwest::redirect::Policy::custom(|attempt| attempt.stop());
+            reqwest::ClientBuilder::new()
+                .redirect(custom)
+                .build()
+                .unwrap()
+                .get(_url)
+                .send()
+                .await
+                .unwrap()
+                .text()
+                .await
+                .unwrap()
+        });
     }
 
     env.delete_local_ref(obj).unwrap();
@@ -40,7 +53,12 @@ pub extern "system" fn Java_cn_smilex_req_Req_req_1post(
         _url = env.get_string(url).unwrap().into();
 
         text = util::run_async(async {
-            reqwest::Client::new()
+            let custom = reqwest::redirect::Policy::custom(|attempt| attempt.stop());
+
+            reqwest::ClientBuilder::new()
+                .redirect(custom)
+                .build()
+                .unwrap()
                 .post(_url)
                 .send()
                 .await
