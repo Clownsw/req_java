@@ -5,6 +5,8 @@ import cn.smilex.req.HttpResponse;
 import cn.smilex.req.Requests;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 /**
  * @author smilex
  */
@@ -20,9 +22,14 @@ public class D1 {
     @Test
     public void testRequest() {
         Requests req = new Requests();
+
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("a", "b");
+
         HttpRequest httpRequest = HttpRequest.build()
                 .setUrl("https://www.google.com.hk/")
-                .setMethod(Requests.REQUEST_METHOD.GET);
+                .setMethod(Requests.REQUEST_METHOD.GET)
+                .setHeaders(headers);
 
         HttpResponse resp = req.request(httpRequest);
         System.out.println(resp);

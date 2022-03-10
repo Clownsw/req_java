@@ -19,7 +19,22 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     let url = util::get_jstring_to_string(&env, "url", &http_request);
     let method = util::get_jint_to_i32(&env, "method", &http_request);
 
-    let client = reqwest::ClientBuilder::new().build().unwrap();
+    let headers = util::parse_hash_map(
+        &env,
+        &env.get_field(http_request, "headers", util::JAVA_CLASS_HASH_MAP)
+            .unwrap()
+            .l()
+            .unwrap(),
+    );
+
+    let client_builder = reqwest::ClientBuilder::new().cookie_store(true);
+
+    if let Some(v) = headers {
+        // 处理请求头
+        println!("{:?}", v);
+    }
+
+    let client = client_builder.build().unwrap();
 
     let resp = util::run_async(async {
         match method {
@@ -30,7 +45,6 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     });
 
     // println!("{}", resp);
-
     let resp_obj = util::new_response_object(&env);
 
     env.set_field(
