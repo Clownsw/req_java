@@ -1,7 +1,7 @@
-use std::future::Future;
-use jni::JNIEnv;
 use jni::objects::{JObject, JString, JValue};
 use jni::sys::jint;
+use jni::JNIEnv;
+use std::future::Future;
 
 pub const JAVA_TYPE_INT: &'static str = "I";
 pub const JAVA_CLASS_STRING: &'static str = "Ljava/lang/String;";
@@ -33,4 +33,11 @@ pub fn get_jstring_to_string(env: &JNIEnv, name: &'static str, obj: &JObject) ->
 pub fn get_jint_to_i32(env: &JNIEnv, name: &'static str, obj: &JObject) -> jint {
     let tmp1: JValue = env.get_field(*obj, name, JAVA_TYPE_INT).unwrap();
     tmp1.i().unwrap()
+}
+
+/// 
+/// 创建一个响应对象
+/// 
+pub fn new_response_object<'a>(env: &'a JNIEnv) -> JObject<'a> {
+    env.new_object(JAVA_CLASS_HTTP_RESPONSE, "()V", &[]).unwrap()
 }

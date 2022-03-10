@@ -21,7 +21,7 @@ public class D1 {
     public void testRequest() {
         Requests req = new Requests();
         HttpRequest httpRequest = HttpRequest.build()
-                .setUrl("https://assbbs.com/")
+                .setUrl("https://www.google.com.hk/")
                 .setMethod(Requests.REQUEST_METHOD.GET);
 
         HttpResponse resp = req.request(httpRequest);

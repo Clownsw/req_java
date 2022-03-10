@@ -1,10 +1,10 @@
-use jni::{
-    JNIEnv,
-    objects::{JObject, JString},
-    sys::jstring,
-};
 use jni::objects::{JClass, JValue};
 use jni::sys::jobject;
+use jni::{
+    objects::{JObject, JString},
+    sys::jstring,
+    JNIEnv,
+};
 
 use crate::util;
 
@@ -17,36 +17,34 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     let http_request_class: JClass = env.get_object_class(http_request).unwrap();
 
     let url = util::get_jstring_to_string(&env, "url", &http_request);
-    println!("url = {}", url);
-
     let method = util::get_jint_to_i32(&env, "method", &http_request);
-    println!("method = {}", method);
 
     let client = reqwest::ClientBuilder::new().build().unwrap();
 
     let resp = util::run_async(async {
         match method {
-            0 => {
-                client.get(url).send().await.unwrap().text().await.unwrap()
-            }
-            1 => {
-                client.post(url).send().await.unwrap().text().await.unwrap()
-            }
+            0 => client.get(url).send().await.unwrap().text().await.unwrap(),
+            1 => client.post(url).send().await.unwrap().text().await.unwrap(),
             _ => String::new(),
         }
     });
 
     // println!("{}", resp);
 
-    let http_response_class = env.find_class(util::JAVA_CLASS_HTTP_RESPONSE).unwrap();
-    let o = env.new_object(http_response_class, "()V", &[]).unwrap();
+    let resp_obj = util::new_response_object(&env);
 
-    env.set_field(o, "body", util::JAVA_CLASS_STRING, JValue::from(JObject::from(env.new_string(resp).unwrap().into_inner()))).unwrap();
+    env.set_field(
+        resp_obj,
+        "body",
+        util::JAVA_CLASS_STRING,
+        JValue::from(JObject::from(env.new_string(resp).unwrap().into_inner())),
+    )
+    .unwrap();
 
     env.delete_local_ref(*http_request_class).unwrap();
     env.delete_local_ref(obj).unwrap();
 
-    o.into_inner()
+    resp_obj.into_inner()
 }
 
 #[no_mangle]
