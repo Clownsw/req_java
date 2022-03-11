@@ -10,6 +10,7 @@ pub const JAVA_CLASS_STRING: &'static str = "Ljava/lang/String;";
 pub const JAVA_CLASS_HASH_MAP: &'static str = "Ljava/util/HashMap;";
 pub const JAVA_CLASS_SET: &'static str = "Ljava/util/Set;";
 
+pub const JAVA_CLASS_HTTP_REQUEST: &'static str = "Lcn/smilex/req/HttpRequest;";
 pub const JAVA_CLASS_HTTP_RESPONSE: &'static str = "Lcn/smilex/req/HttpResponse;";
 
 lazy_static! {
@@ -34,22 +35,35 @@ pub fn init(env: &JNIEnv) {
     let string_class = env
         .new_global_ref(env.find_class(JAVA_CLASS_STRING).unwrap())
         .unwrap();
+
     let hash_map_class = env
         .new_global_ref(env.find_class(JAVA_CLASS_HASH_MAP).unwrap())
         .unwrap();
+
     let set_class = env
         .new_global_ref(env.find_class(JAVA_CLASS_SET).unwrap())
         .unwrap();
 
+    let http_request_class = env
+        .new_global_ref(env.find_class(JAVA_CLASS_HTTP_REQUEST).unwrap())
+        .unwrap();
+
+    let http_response_class = env
+        .new_global_ref(env.find_class(JAVA_CLASS_HTTP_RESPONSE).unwrap())
+        .unwrap();
+
     let mut classes = CLASSES.lock().unwrap();
+
     classes.insert("String".to_string(), string_class);
     classes.insert("HashMap".to_string(), hash_map_class);
     classes.insert("Set".to_string(), set_class);
+    classes.insert("HttpRequest".to_string(), http_request_class);
+    classes.insert("HttpResponse".to_string(), http_response_class);
 }
 
-/// 
+///
 /// 从CLASSES通过key获取全局引用
-/// 
+///
 pub fn get_global_referener(key: String) -> GlobalRef {
     CLASSES.lock().unwrap().get(&key).unwrap().clone()
 }

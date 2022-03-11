@@ -1,5 +1,7 @@
 package cn.smilex.req;
 
+import java.util.Map;
+
 /**
  * @author smilex
  */
@@ -32,6 +34,7 @@ public class Requests {
         return _request(req);
     }
 
+    public static native Map getMap();
     private static native void init();
     private native String _fast_request(String url, boolean isPost);
     private native HttpResponse _request(HttpRequest req);

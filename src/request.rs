@@ -9,6 +9,24 @@ use jni::{
 use crate::util::{self};
 
 #[no_mangle]
+pub extern "system" fn Java_cn_smilex_req_Requests_getMap(env: JNIEnv, class: JClass) -> jobject {
+
+    env.delete_local_ref(*class).unwrap();
+
+    let s = util::get_global_referener("HashMap".to_string());
+    let obj = env.new_object(&s, "()V", &[]).unwrap();
+
+    if obj.is_null() {
+        println!("创建失败!");
+    } else {
+        let size = util::get_hash_map_size(&env, &obj);
+        println!("size = {}", size);
+    }
+
+    obj.into_inner()
+}
+
+#[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests_init(env: JNIEnv, class: JClass) {
     util::init(&env);
     env.delete_local_ref(*class).unwrap();

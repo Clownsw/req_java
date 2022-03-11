@@ -6,6 +6,7 @@ import cn.smilex.req.Requests;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author smilex
@@ -40,5 +41,11 @@ public class D1 {
 
         System.out.println(req.fast_get("https://www.baidu.com/"));
         System.out.println(req.fast_post("https://www.smilex.cn/"));
+    }
+
+    @Test
+    public void test() {
+        Map map = Requests.getMap();
+        System.out.println(map);
     }
 }
