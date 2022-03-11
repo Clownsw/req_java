@@ -6,9 +6,12 @@ use std::future::Future;
 use std::sync::Mutex;
 
 pub const JAVA_TYPE_INT: &'static str = "I";
+
+pub const JAVA_CLASS_OBJECT: &'static str = "Ljava/lang/Object;";
 pub const JAVA_CLASS_STRING: &'static str = "Ljava/lang/String;";
 pub const JAVA_CLASS_HASH_MAP: &'static str = "Ljava/util/HashMap;";
 pub const JAVA_CLASS_SET: &'static str = "Ljava/util/Set;";
+pub const JAVA_CLASS_ITERATOR: &'static str = "Ljava/util/Iterator;";
 
 pub const JAVA_CLASS_HTTP_REQUEST: &'static str = "Lcn/smilex/req/HttpRequest;";
 pub const JAVA_CLASS_HTTP_RESPONSE: &'static str = "Lcn/smilex/req/HttpResponse;";
@@ -32,6 +35,10 @@ pub fn run_async<F: Future>(f: F) -> F::Output {
 /// 初始化
 ///
 pub fn init(env: &JNIEnv) {
+    let object_class = env
+        .new_global_ref(env.find_class(JAVA_CLASS_OBJECT).unwrap())
+        .unwrap();
+
     let string_class = env
         .new_global_ref(env.find_class(JAVA_CLASS_STRING).unwrap())
         .unwrap();
@@ -44,6 +51,10 @@ pub fn init(env: &JNIEnv) {
         .new_global_ref(env.find_class(JAVA_CLASS_SET).unwrap())
         .unwrap();
 
+    let iterator_class = env
+        .new_global_ref(env.find_class(JAVA_CLASS_ITERATOR).unwrap())
+        .unwrap();
+
     let http_request_class = env
         .new_global_ref(env.find_class(JAVA_CLASS_HTTP_REQUEST).unwrap())
         .unwrap();
@@ -54,9 +65,11 @@ pub fn init(env: &JNIEnv) {
 
     let mut classes = CLASSES.lock().unwrap();
 
+    classes.insert("Object", object_class);
     classes.insert("String", string_class);
     classes.insert("HashMap", hash_map_class);
     classes.insert("Set", set_class);
+    classes.insert("Iterator", iterator_class);
     classes.insert("HttpRequest", http_request_class);
     classes.insert("HttpResponse", http_response_class);
 }
@@ -86,17 +99,13 @@ pub fn add_global_referener<'a, O: Into<JObject<'a>>>(
     r_c
 }
 
-/// 
+///
 /// 对add_global_referener方法的封装, 使得调用该方法的代码更加简洁
-/// 
+///
 pub fn get_global_ref(env: &JNIEnv, key: &'static str) -> GlobalRef {
     match get_global_referener(key) {
         Some(v) => v,
-        None => add_global_referener(
-            &env,
-            key,
-            env.find_class(JAVA_CLASS_HASH_MAP).unwrap(),
-        ),
+        None => add_global_referener(&env, key, env.find_class(JAVA_CLASS_HASH_MAP).unwrap()),
     }
 }
 
@@ -173,7 +182,51 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
         println!("headers size = {}", size);
         if size > 0 {
             // 进行遍历
-            let _ = get_hash_map_key_set(env, map);
+            let key_set = get_hash_map_key_set(env, map).l().unwrap();
+
+            let iter = env
+                .call_method(
+                    key_set,
+                    "iterator",
+                    format!("(){}", JAVA_CLASS_ITERATOR),
+                    &[],
+                )
+                .unwrap()
+                .l()
+                .unwrap();
+
+            // while env.call_method(iter, "hasNext", "()Z", &[]).unwrap().z().unwrap() {
+            // println!("1");
+            // }
+
+            for _ in 0..size {
+                let k: JString = env
+                    .call_method(*(&iter), "next", format!("(){}", JAVA_CLASS_OBJECT), &[])
+                    .unwrap()
+                    .l()
+                    .unwrap()
+                    .into();
+
+                if !k.is_null() {
+                    let _k = jstring_to_string(env, &k);
+
+                    let v: JString = env
+                        .call_method(
+                            *map,
+                            "get",
+                            format!("({}){}", JAVA_CLASS_OBJECT, JAVA_CLASS_OBJECT),
+                            &[JValue::from(env.new_string(&_k[..]).unwrap())],
+                        )
+                        .unwrap()
+                        .l()
+                        .unwrap()
+                        .into();
+
+                    let _v = jstring_to_string(env, &v);
+
+                    println!("k = {}, v = {}", _k, _v);
+                }
+            }
         }
     }
     None

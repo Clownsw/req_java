@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1715c0cf-4b95-461d-a6d9-fbe6b3456d40" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/request.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/request.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/cn/smilex/D1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cn/smilex/D1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../release/req_java.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../src/util.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/util.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,7 +53,7 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
-  <component name="RunManager" selected="JUnit.D1.test">
+  <component name="RunManager" selected="JUnit.D1.testRequest">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -114,8 +115,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.D1.test" />
         <item itemvalue="JUnit.D1.testRequest" />
+        <item itemvalue="JUnit.D1.test" />
         <item itemvalue="JUnit.D1.testFastRequest" />
       </list>
     </recent_temporary>

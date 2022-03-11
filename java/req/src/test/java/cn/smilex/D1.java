@@ -26,6 +26,8 @@ public class D1 {
 
         HashMap<String, String> headers = new HashMap<>();
         headers.put("a", "b");
+        headers.put("c", "d");
+        headers.put("e", "f");
 
         HttpRequest httpRequest = HttpRequest.build()
                 .setUrl("https://www.google.com.hk/")
@@ -44,8 +46,22 @@ public class D1 {
     }
 
     @Test
-    public void test() {
-        Map map = Requests.getMap();
-        System.out.println(map);
+    public void test() throws InterruptedException {
+        var t = new Runnable() {
+            @Override
+            public void run() {
+                Map map = Requests.getMap();
+                System.out.println(map);
+            }
+        };
+
+        var t1 = new Thread(t);
+        var t2 = new Thread(t);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
     }
 }
