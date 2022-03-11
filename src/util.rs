@@ -14,7 +14,7 @@ pub const JAVA_CLASS_HTTP_REQUEST: &'static str = "Lcn/smilex/req/HttpRequest;";
 pub const JAVA_CLASS_HTTP_RESPONSE: &'static str = "Lcn/smilex/req/HttpResponse;";
 
 lazy_static! {
-    pub static ref CLASSES: Mutex<HashMap<String, GlobalRef>> = Mutex::new(HashMap::new());
+    pub static ref CLASSES: Mutex<HashMap<&'static str, GlobalRef>> = Mutex::new(HashMap::new());
 }
 
 ///
@@ -54,18 +54,50 @@ pub fn init(env: &JNIEnv) {
 
     let mut classes = CLASSES.lock().unwrap();
 
-    classes.insert("String".to_string(), string_class);
-    classes.insert("HashMap".to_string(), hash_map_class);
-    classes.insert("Set".to_string(), set_class);
-    classes.insert("HttpRequest".to_string(), http_request_class);
-    classes.insert("HttpResponse".to_string(), http_response_class);
+    classes.insert("String", string_class);
+    classes.insert("HashMap", hash_map_class);
+    classes.insert("Set", set_class);
+    classes.insert("HttpRequest", http_request_class);
+    classes.insert("HttpResponse", http_response_class);
 }
 
 ///
 /// 从CLASSES通过key获取全局引用
 ///
-pub fn get_global_referener(key: String) -> GlobalRef {
-    CLASSES.lock().unwrap().get(&key).unwrap().clone()
+pub fn get_global_referener(key: &str) -> Option<GlobalRef> {
+    match CLASSES.lock().unwrap().get(&key) {
+        Some(v) => Some(v.clone()),
+        None => None,
+    }
+}
+
+///
+/// 向CLASSES添加全局引用
+///
+pub fn add_global_referener<'a, O: Into<JObject<'a>>>(
+    env: &'a JNIEnv,
+    key: &'static str,
+    o: O,
+) -> GlobalRef {
+    let r = env.new_global_ref(o).unwrap();
+    let r_c = r.clone();
+
+    CLASSES.lock().unwrap().insert(key, r);
+    r_c
+}
+
+/// 
+/// 对add_global_referener方法的封装, 使得调用该方法的代码更加简洁
+/// 
+pub fn get_global_ref(env: &JNIEnv, key: &'static str) -> GlobalRef {
+    match get_global_referener(key) {
+        Some(v) => v,
+        None => add_global_referener(
+            &env,
+            key,
+            env.find_class(JAVA_CLASS_HASH_MAP).unwrap(),
+        ),
+    }
 }
 
 ///

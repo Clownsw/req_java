@@ -10,11 +10,11 @@ use crate::util::{self};
 
 #[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests_getMap(env: JNIEnv, class: JClass) -> jobject {
-
     env.delete_local_ref(*class).unwrap();
 
-    let s = util::get_global_referener("HashMap".to_string());
-    let obj = env.new_object(&s, "()V", &[]).unwrap();
+    let r = util::get_global_ref(&env, "HashMap");
+
+    let obj = env.new_object(&r, "()V", &[]).unwrap();
 
     if obj.is_null() {
         println!("创建失败!");
@@ -108,36 +108,37 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     resp_obj.into_inner()
 }
 
-#[no_mangle]
-pub extern "system" fn Java_cn_smilex_req_Requests_req_1get(
-    env: JNIEnv,
-    obj: JObject,
-    url: JString,
-) -> jstring {
-    let mut _url: String;
-    let mut text: String = String::new();
+// #[no_mangle]
+// pub extern "system" fn Java_cn_smilex_req_Requests_req_1get(
+//     env: JNIEnv,
+//     obj: JObject,
+//     url: JString,
+// ) -> jstring {
+//     let mut _url: String;
+//     let mut text: String = String::new();
 
-    if !url.is_null() {
-        _url = env.get_string(url).unwrap().into();
+//     if !url.is_null() {
+//         _url = env.get_string(url).unwrap().into();
 
-        text = util::run_async(async {
-            let custom = reqwest::redirect::Policy::custom(|attempt| attempt.stop());
-            reqwest::ClientBuilder::new()
-                .redirect(custom)
-                .build()
-                .unwrap()
-                .get(_url)
-                .send()
-                .await
-                .unwrap()
-                .text()
-                .await
-                .unwrap()
-        });
-    }
+//         text = util::run_async(async {
+//             let custom = reqwest::redirect::Policy::custom(|attempt| attempt.stop());
 
-    env.delete_local_ref(obj).unwrap();
-    env.delete_local_ref(*url).unwrap();
+//             reqwest::ClientBuilder::new()
+//                 .redirect(custom)
+//                 .build()
+//                 .unwrap()
+//                 .get(_url)
+//                 .send()
+//                 .await
+//                 .unwrap()
+//                 .text()
+//                 .await
+//                 .unwrap()
+//         });
+//     }
 
-    env.new_string(text).unwrap().into_inner()
-}
+//     env.delete_local_ref(obj).unwrap();
+//     env.delete_local_ref(*url).unwrap();
+
+//     env.new_string(text).unwrap().into_inner()
+// }
