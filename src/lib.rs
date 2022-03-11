@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate lazy_static;
+
 pub mod request;
 pub mod util;
 
@@ -17,7 +20,7 @@ mod tests {
 
     #[test]
     fn test_redirect() {
-        let custom = reqwest::redirect::Policy::custom( |attempt| attempt.stop());
+        let custom = reqwest::redirect::Policy::custom(|attempt| attempt.stop());
         let client = reqwest::Client::builder().redirect(custom).build().unwrap();
 
         let resp = crate::util::run_async(async {

@@ -1,8 +1,9 @@
-use jni::objects::{JObject, JString, JValue};
+use jni::objects::{GlobalRef, JObject, JString, JValue};
 use jni::sys::jint;
 use jni::JNIEnv;
 use std::collections::HashMap;
 use std::future::Future;
+use std::sync::Mutex;
 
 pub const JAVA_TYPE_INT: &'static str = "I";
 pub const JAVA_CLASS_STRING: &'static str = "Ljava/lang/String;";
@@ -10,6 +11,10 @@ pub const JAVA_CLASS_HASH_MAP: &'static str = "Ljava/util/HashMap;";
 pub const JAVA_CLASS_SET: &'static str = "Ljava/util/Set;";
 
 pub const JAVA_CLASS_HTTP_RESPONSE: &'static str = "Lcn/smilex/req/HttpResponse;";
+
+lazy_static! {
+    pub static ref CLASSES: Mutex<HashMap<String, GlobalRef>> = Mutex::new(HashMap::new());
+}
 
 ///
 /// 提供异步执行环境
@@ -20,6 +25,33 @@ pub fn run_async<F: Future>(f: F) -> F::Output {
         .build()
         .unwrap()
         .block_on(f)
+}
+
+///
+/// 初始化
+///
+pub fn init(env: &JNIEnv) {
+    let string_class = env
+        .new_global_ref(env.find_class(JAVA_CLASS_STRING).unwrap())
+        .unwrap();
+    let hash_map_class = env
+        .new_global_ref(env.find_class(JAVA_CLASS_HASH_MAP).unwrap())
+        .unwrap();
+    let set_class = env
+        .new_global_ref(env.find_class(JAVA_CLASS_SET).unwrap())
+        .unwrap();
+
+    let mut classes = CLASSES.lock().unwrap();
+    classes.insert("String".to_string(), string_class);
+    classes.insert("HashMap".to_string(), hash_map_class);
+    classes.insert("Set".to_string(), set_class);
+}
+
+/// 
+/// 从CLASSES通过key获取全局引用
+/// 
+pub fn get_global_referener(key: String) -> GlobalRef {
+    CLASSES.lock().unwrap().get(&key).unwrap().clone()
 }
 
 ///
