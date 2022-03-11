@@ -25,15 +25,14 @@ pub fn run_async<F: Future>(f: F) -> F::Output {
 ///
 /// 快速请求(快速是指没有其他附加参数和检查)
 ///
-pub fn fast_request(url: String, is_port: bool) -> String {
+pub fn fast_request(url: String, is_post: bool) -> String {
     let client = reqwest::Client::new();
 
     run_async(async {
-        if is_port {
-            return client.get(url).send().await.unwrap().text().await.unwrap();
+        if is_post {
+            return client.post(url).send().await.unwrap().text().await.unwrap();
         }
-        
-        client.post(url).send().await.unwrap().text().await.unwrap()
+        client.get(url).send().await.unwrap().text().await.unwrap()
     })
 }
 

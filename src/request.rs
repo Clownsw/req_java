@@ -13,12 +13,12 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1fast_1request(
     env: JNIEnv,
     obj: JObject,
     url: JString,
-    is_port: jboolean,
+    is_post: jboolean,
 ) -> jstring {
     let _url = util::jstring_to_string(&env, &url);
-    let _is_port = if is_port == JNI_TRUE { true } else { false };
+    let _is_post = if is_post == JNI_TRUE { true } else { false };
 
-    let resp_text = util::fast_request(_url, _is_port);
+    let resp_text = util::fast_request(_url, _is_post);
 
     env.delete_local_ref(obj).unwrap();
     env.delete_local_ref(*url).unwrap();

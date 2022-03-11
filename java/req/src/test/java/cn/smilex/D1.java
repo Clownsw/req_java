@@ -38,7 +38,7 @@ public class D1 {
     public void testFastRequest() {
         Requests req = new Requests();
 
-        System.out.println(req.fast_get("https://www.google.com.hk/"));
-        System.out.println(req.fast_post("https://www.google.com.hk/"));
+        System.out.println(req.fast_get("https://www.baidu.com/"));
+        System.out.println(req.fast_post("https://www.smilex.cn/"));
     }
 }
