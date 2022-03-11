@@ -8,7 +8,6 @@ import java.util.HashMap;
  * @author smilex
  */
 public class HttpRequest {
-    private int id;
     private int method;
     private String url;
     private HashMap<String, String> headers;
@@ -38,11 +37,6 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest setId(int id) {
-        this.id = id;
-        return this;
-    }
-
     public HttpRequest setCookies(HashMap<String, String> cookies) {
         this.cookies = cookies;
         return this;
@@ -59,10 +53,6 @@ public class HttpRequest {
 
     public HashMap<String, String> getHeaders() {
         return headers;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public HashMap<String, String> getCookies() {

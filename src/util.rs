@@ -7,6 +7,7 @@ use std::future::Future;
 pub const JAVA_TYPE_INT: &'static str = "I";
 pub const JAVA_CLASS_STRING: &'static str = "Ljava/lang/String;";
 pub const JAVA_CLASS_HASH_MAP: &'static str = "Ljava/util/HashMap;";
+pub const JAVA_CLASS_SET: &'static str = "Ljava/util/Set;";
 
 pub const JAVA_CLASS_HTTP_RESPONSE: &'static str = "Lcn/smilex/req/HttpResponse;";
 
@@ -22,7 +23,29 @@ pub fn run_async<F: Future>(f: F) -> F::Output {
 }
 
 ///
-/// 将JString转换为 String
+/// 快速请求(快速是指没有其他附加参数和检查)
+///
+pub fn fast_request(url: String, is_port: bool) -> String {
+    let client = reqwest::Client::new();
+
+    run_async(async {
+        if is_port {
+            client.get(url).send().await.unwrap().text().await.unwrap()
+        } else {
+            client.post(url).send().await.unwrap().text().await.unwrap()
+        }
+    })
+}
+
+///
+/// 将JString并将其转换为 String
+///
+pub fn jstring_to_string(env: &JNIEnv, obj: &JString) -> String {
+    env.get_string(*obj).unwrap().into()
+}
+
+///
+/// 获取JString并将其转换为 String
 ///
 pub fn get_jstring_to_string(env: &JNIEnv, name: &'static str, obj: &JObject) -> String {
     let tmp1: JValue = env.get_field(*obj, name, JAVA_CLASS_STRING).unwrap();
@@ -57,6 +80,14 @@ pub fn get_hash_map_size(env: &JNIEnv, map: &JObject) -> i32 {
 }
 
 ///
+/// 调用HashMap的keySet并返回
+///
+pub fn get_hash_map_key_set<'a>(env: &'a JNIEnv, map: &'a JObject) -> JValue<'a> {
+    env.call_method(*map, "keySet", format!("(){}", JAVA_CLASS_SET), &[])
+        .unwrap()
+}
+
+///
 /// 解析HashMap
 ///
 pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, String>> {
@@ -65,6 +96,7 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
         println!("headers size = {}", size);
         if size > 0 {
             // 进行遍历
+            let _ = get_hash_map_key_set(env, map);
         }
     }
     None

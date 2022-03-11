@@ -32,6 +32,13 @@ public class D1 {
                 .setHeaders(headers);
 
         HttpResponse resp = req.request(httpRequest);
-        System.out.println(resp);
+    }
+
+    @Test
+    public void testFastRequest() {
+        Requests req = new Requests();
+
+        System.out.println(req.fast_get("https://www.google.com.hk/"));
+        System.out.println(req.fast_post("https://www.google.com.hk/"));
     }
 }
