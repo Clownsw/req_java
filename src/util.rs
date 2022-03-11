@@ -30,10 +30,10 @@ pub fn fast_request(url: String, is_port: bool) -> String {
 
     run_async(async {
         if is_port {
-            client.get(url).send().await.unwrap().text().await.unwrap()
-        } else {
-            client.post(url).send().await.unwrap().text().await.unwrap()
+            return client.get(url).send().await.unwrap().text().await.unwrap();
         }
+        
+        client.post(url).send().await.unwrap().text().await.unwrap()
     })
 }
 
