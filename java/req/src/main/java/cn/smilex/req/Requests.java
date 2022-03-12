@@ -1,7 +1,5 @@
 package cn.smilex.req;
 
-import java.util.Map;
-
 /**
  * @author smilex
  */
@@ -19,11 +17,10 @@ public class Requests {
         POST,
         DELETE,
         PUT,
-        TRACE,
     }
 
     public String fast_get(String url) {
-        return _fast_request(url, false);
+        return Requests._fast_request(url, false);
     }
 
     public String fast_post(String url) {
@@ -31,11 +28,15 @@ public class Requests {
     }
 
     public HttpResponse request(HttpRequest req) {
+        var m = req.getHeaders();
+        m.remove("cookie");
+        m.put("cookie", RequestUtil.cookiesToStr(req.getCookies()));
         return _request(req);
     }
 
-    public static native Map getMap();
     private static native void init();
-    private native String _fast_request(String url, boolean isPost);
-    private native HttpResponse _request(HttpRequest req);
+
+    private static native String _fast_request(String url, boolean isPost);
+
+    private static native HttpResponse _request(HttpRequest req);
 }

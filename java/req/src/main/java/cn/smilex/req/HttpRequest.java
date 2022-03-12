@@ -15,6 +15,8 @@ public class HttpRequest {
 
     private HttpRequest() {
         this.method = 0;
+        headers = new HashMap<>();
+        cookies = new HashMap<>();
     }
 
     public static HttpRequest build() {
@@ -37,8 +39,18 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest addHeader(String name, String value) {
+        this.headers.put(name, value);
+        return this;
+    }
+
     public HttpRequest setCookies(HashMap<String, String> cookies) {
         this.cookies = cookies;
+        return this;
+    }
+
+    public HttpRequest addCookie(String name, String value) {
+        this.cookies.put(name, value);
         return this;
     }
 

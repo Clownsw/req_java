@@ -8,24 +8,6 @@ use jni::{
 };
 
 #[no_mangle]
-pub extern "system" fn Java_cn_smilex_req_Requests_getMap(env: JNIEnv, class: JClass) -> jobject {
-    env.delete_local_ref(*class).unwrap();
-
-    let r = util::get_global_ref(&env, "HashMap");
-
-    let obj = env.new_object(&r, "()V", &[]).unwrap();
-
-    if obj.is_null() {
-        println!("创建失败!");
-    } else {
-        let size = util::get_hash_map_size(&env, &obj);
-        println!("size = {}", size);
-    }
-
-    obj.into_inner()
-}
-
-#[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests_init(env: JNIEnv, class: JClass) {
     util::init(&env);
     env.delete_local_ref(*class).unwrap();
@@ -34,7 +16,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests_init(env: JNIEnv, class: JCla
 #[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests__1fast_1request(
     env: JNIEnv,
-    obj: JObject,
+    class: JClass,
     url: JString,
     is_post: jboolean,
 ) -> jstring {
@@ -43,7 +25,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1fast_1request(
 
     let resp_text = util::fast_request(_url, _is_post);
 
-    env.delete_local_ref(obj).unwrap();
+    env.delete_local_ref(*class).unwrap();
     env.delete_local_ref(*url).unwrap();
 
     env.new_string(resp_text).unwrap().into_inner()
@@ -52,7 +34,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1fast_1request(
 #[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     env: JNIEnv,
-    obj: JObject,
+    class: JClass,
     http_request: JObject,
 ) -> jobject {
     let http_request_class: JClass = env.get_object_class(http_request).unwrap();
@@ -100,7 +82,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     .unwrap();
 
     env.delete_local_ref(*http_request_class).unwrap();
-    env.delete_local_ref(obj).unwrap();
+    env.delete_local_ref(*class).unwrap();
 
     resp_obj.into_inner()
 }

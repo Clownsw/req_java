@@ -1,5 +1,7 @@
 package cn.smilex.req;
 
+import java.util.HashMap;
+
 /**
  * 工具类
  *
@@ -24,10 +26,6 @@ public final class RequestUtil {
             case 3: {
                 return Requests.REQUEST_METHOD.DELETE;
             }
-
-            case 4: {
-                return Requests.REQUEST_METHOD.TRACE;
-            }
         }
     }
 
@@ -49,10 +47,21 @@ public final class RequestUtil {
             case DELETE: {
                 return 3;
             }
-
-            case TRACE: {
-                return 4;
-            }
         }
+    }
+
+    public static String cookiesToStr(HashMap<String, String> cookies) {
+        if (cookies.size() <= 0) {
+            return "";
+        }
+
+        StringBuilder str = new StringBuilder();
+
+        for (String key : cookies.keySet()) {
+            String value = cookies.get(key);
+            str.append(key).append("=").append(value).append(";");
+        }
+
+        return str.toString();
     }
 }
