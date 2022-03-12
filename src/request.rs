@@ -5,7 +5,6 @@ use jni::{
     sys::jstring,
     JNIEnv,
 };
-
 use crate::util::{self};
 
 #[no_mangle]
@@ -72,24 +71,22 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             .unwrap(),
     );
 
-    // let client_builder = reqwest::ClientBuilder::new().cookie_store(true);
+    let mut client_builder = reqwest::ClientBuilder::new().cookie_store(true);
 
+    // 处理请求头
     if let Some(v) = headers {
-        // 处理请求头
-        println!("{:?}", v);
+        client_builder = client_builder.default_headers(v);
     }
 
-    // let client = client_builder.build().unwrap();
+    let client = client_builder.build().unwrap();
 
-    // let resp = util::run_async(async {
-    //     match method {
-    //         0 => client.get(url).send().await.unwrap().text().await.unwrap(),
-    //         1 => client.post(url).send().await.unwrap().text().await.unwrap(),
-    //         _ => String::new(),
-    //     }
-    // });
-
-    let resp = String::new();
+    let resp = util::run_async(async {
+        match method {
+            0 => client.get(url).send().await.unwrap().text().await.unwrap(),
+            1 => client.post(url).send().await.unwrap().text().await.unwrap(),
+            _ => String::new(),
+        }
+    });
 
     // println!("{}", resp);
     let resp_obj = util::new_response_object(&env);

@@ -1,6 +1,7 @@
 use jni::objects::{GlobalRef, JObject, JString, JValue};
 use jni::sys::jint;
 use jni::JNIEnv;
+use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use std::collections::HashMap;
 use std::future::Future;
 use std::sync::Mutex;
@@ -176,7 +177,7 @@ pub fn get_hash_map_key_set<'a>(env: &'a JNIEnv, map: &'a JObject) -> JValue<'a>
 ///
 /// 解析HashMap
 ///
-pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, String>> {
+pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HeaderMap> {
     if !map.is_null() {
         let size = get_hash_map_size(env, &map);
         println!("headers size = {}", size);
@@ -195,9 +196,7 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
                 .l()
                 .unwrap();
 
-            // while env.call_method(iter, "hasNext", "()Z", &[]).unwrap().z().unwrap() {
-            // println!("1");
-            // }
+            let mut headers: HeaderMap = HeaderMap::new();
 
             for _ in 0..size {
                 let k: JString = env
@@ -224,10 +223,16 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
 
                     let _v = jstring_to_string(env, &v);
 
-                    println!("k = {}, v = {}", _k, _v);
+                    headers.insert(
+                        HeaderName::from_bytes(_k.as_bytes()).unwrap(),
+                        HeaderValue::from_str(&_v[..]).unwrap(),
+                    );
                 }
             }
+
+            return Some(headers);
         }
     }
+
     None
 }

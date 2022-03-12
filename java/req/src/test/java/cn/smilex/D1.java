@@ -30,11 +30,13 @@ public class D1 {
         headers.put("e", "f");
 
         HttpRequest httpRequest = HttpRequest.build()
-                .setUrl("https://www.google.com.hk/")
+//                .setUrl("https://www.google.com.hk/")
+                .setUrl("http://localhost:8888/test")
                 .setMethod(Requests.REQUEST_METHOD.GET)
                 .setHeaders(headers);
 
         HttpResponse resp = req.request(httpRequest);
+        System.out.println(resp.getBody());
     }
 
     @Test
