@@ -10,11 +10,15 @@ import java.util.HashMap;
 public class HttpRequest {
     private int method;
     private String url;
+    private String body;
+    private HashMap<String, String> params;
     private HashMap<String, String> headers;
     private HashMap<String, String> cookies;
 
     private HttpRequest() {
         this.method = 0;
+        body = "";
+        params = new HashMap<>();
         headers = new HashMap<>();
         cookies = new HashMap<>();
     }
@@ -31,6 +35,11 @@ public class HttpRequest {
 
     public HttpRequest setUrl(String url) {
         this.url = url;
+        return this;
+    }
+
+    public HttpRequest setBody(String body) {
+        this.body = body;
         return this;
     }
 
@@ -54,6 +63,16 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest setParams(HashMap<String, String> params) {
+        this.params = params;
+        return this;
+    }
+
+    public HttpRequest addParam(String name, String value) {
+        this.params.put(name, value);
+        return this;
+    }
+
     /* GET */
     public Requests.REQUEST_METHOD getMethod() {
         return RequestUtil.intToRequestMethodEnum(this.method);
@@ -63,11 +82,19 @@ public class HttpRequest {
         return url;
     }
 
+    public String getBody() {
+        return body;
+    }
+
     public HashMap<String, String> getHeaders() {
         return headers;
     }
 
     public HashMap<String, String> getCookies() {
         return cookies;
+    }
+
+    public HashMap<String, String> getParams() {
+        return params;
     }
 }

@@ -103,10 +103,10 @@ pub fn add_global_referener<'a, O: Into<JObject<'a>>>(
 ///
 /// 对add_global_referener方法的封装, 使得调用该方法的代码更加简洁
 ///
-pub fn get_global_ref(env: &JNIEnv, key: &'static str) -> GlobalRef {
+pub fn get_global_ref(env: &JNIEnv, key: &'static str, class_name: &'static str) -> GlobalRef {
     match get_global_referener(key) {
         Some(v) => v,
-        None => add_global_referener(&env, key, env.find_class(JAVA_CLASS_HASH_MAP).unwrap()),
+        None => add_global_referener(&env, key, env.find_class(class_name).unwrap()),
     }
 }
 
@@ -180,7 +180,7 @@ pub fn get_hash_map_key_set<'a>(env: &'a JNIEnv, map: &'a JObject) -> JValue<'a>
 pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HeaderMap> {
     if !map.is_null() {
         let size = get_hash_map_size(env, &map);
-        println!("headers size = {}", size);
+
         if size > 0 {
             // 进行遍历
             let key_set = get_hash_map_key_set(env, map).l().unwrap();

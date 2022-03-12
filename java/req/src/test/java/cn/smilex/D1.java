@@ -28,7 +28,8 @@ public class D1 {
                 .setMethod(Requests.REQUEST_METHOD.GET)
                 .addHeader("a", "b")
                 .addCookie("name", "xuda")
-                .addCookie("age", "18");
+                .addCookie("age", "18")
+                .setBody("this is Body");
 
         HttpResponse resp = req.request(httpRequest);
         System.out.println(resp.getBody());

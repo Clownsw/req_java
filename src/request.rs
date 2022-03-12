@@ -37,13 +37,16 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     class: JClass,
     http_request: JObject,
 ) -> jobject {
-    let http_request_class: JClass = env.get_object_class(http_request).unwrap();
-
     let url = util::get_jstring_to_string(&env, "url", &http_request);
-    println!("url = {}", url);
+    // println!("url = {}", url);
 
     let method = util::get_jint_to_i32(&env, "method", &http_request);
-    println!("method = {}", method);
+    // println!("method = {}", method);
+
+    let body = util::get_jstring_to_string(&env, "body", &http_request);
+    let body_status = body.eq("");
+
+    println!("body: {}", body);
 
     let headers = util::parse_hash_map(
         &env,
@@ -64,8 +67,24 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
 
     let resp = util::run_async(async {
         match method {
-            0 => client.get(url).send().await.unwrap().text().await.unwrap(),
-            1 => client.post(url).send().await.unwrap().text().await.unwrap(),
+            0 => {
+                let mut req = client.get(url);
+
+                if !body_status {
+                    req = req.body(body);
+                }
+
+                req.send().await.unwrap().text().await.unwrap()
+            }
+            1 => {
+                let mut req = client.post(url);
+
+                if !body_status {
+                    req = req.body(body);
+                }
+
+                req.send().await.unwrap().text().await.unwrap()
+            }
             _ => String::new(),
         }
     });
@@ -81,7 +100,6 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     )
     .unwrap();
 
-    env.delete_local_ref(*http_request_class).unwrap();
     env.delete_local_ref(*class).unwrap();
 
     resp_obj.into_inner()
