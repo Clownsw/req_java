@@ -177,7 +177,7 @@ pub fn get_hash_map_key_set<'a>(env: &'a JNIEnv, map: &'a JObject) -> JValue<'a>
 ///
 /// 解析HashMap
 ///
-pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HeaderMap> {
+pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, String>> {
     if !map.is_null() {
         let size = get_hash_map_size(env, &map);
 
@@ -196,7 +196,8 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HeaderMap> {
                 .l()
                 .unwrap();
 
-            let mut headers: HeaderMap = HeaderMap::new();
+            let mut headers = HashMap::new();
+            // let mut headers: HeaderMap = HeaderMap::new();
 
             for _ in 0..size {
                 let k: JString = env
@@ -223,10 +224,11 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HeaderMap> {
 
                     let _v = jstring_to_string(env, &v);
 
-                    headers.insert(
-                        HeaderName::from_bytes(_k.as_bytes()).unwrap(),
-                        HeaderValue::from_str(_v.as_str()).unwrap(),
-                    );
+                    // headers.insert(
+                    //     HeaderName::from_bytes(_k.as_bytes()).unwrap(),
+                    //     HeaderValue::from_str(_v.as_str()).unwrap(),
+                    // );
+                    headers.insert(_k, _v);
                 }
             }
 
@@ -235,4 +237,17 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HeaderMap> {
     }
 
     None
+}
+
+pub fn hash_map_to_header_map(map: HashMap<String, String>) -> HeaderMap {
+    let mut m = HeaderMap::new();
+
+    for item in map.iter() {
+        m.insert(
+            HeaderName::from_bytes(item.0.as_bytes()).unwrap(),
+            HeaderValue::from_str(item.1.as_str()).unwrap(),
+        );
+    }
+
+    m
 }

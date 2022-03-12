@@ -5,8 +5,6 @@ import cn.smilex.req.HttpResponse;
 import cn.smilex.req.Requests;
 import org.junit.Test;
 
-import java.util.HashMap;
-
 /**
  * @author smilex
  */
@@ -27,9 +25,11 @@ public class D1 {
                 .setUrl("http://localhost:8080/test")
                 .setMethod(Requests.REQUEST_METHOD.GET)
                 .addHeader("a", "b")
-                .addCookie("name", "xuda")
-                .addCookie("age", "18")
-                .setBody("this is Body");
+                .addCookie("name", "x")
+                .addCookie("age", "100")
+                .setBody("this is Body")
+                .addParam("name", "x")
+                .addParam("age", "100");
 
         HttpResponse resp = req.request(httpRequest);
         System.out.println(resp.getBody());

@@ -46,7 +46,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     let body = util::get_jstring_to_string(&env, "body", &http_request);
     let body_status = body.eq("");
 
-    println!("body: {}", body);
+    // println!("body: {}", body);
 
     let headers = util::parse_hash_map(
         &env,
@@ -56,37 +56,47 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             .unwrap(),
     );
 
-    let mut client_builder = reqwest::ClientBuilder::new().cookie_store(true);
+    let params = util::parse_hash_map(
+        &env,
+        &env.get_field(http_request, "params", util::JAVA_CLASS_HASH_MAP)
+            .unwrap()
+            .l()
+            .unwrap(),
+    );
+
+    let mut client_builder = reqwest::ClientBuilder::new();
 
     // 处理请求头
     if let Some(v) = headers {
-        client_builder = client_builder.default_headers(v);
+        client_builder = client_builder.default_headers(util::hash_map_to_header_map(v));
     }
 
     let client = client_builder.build().unwrap();
 
     let resp = util::run_async(async {
-        match method {
-            0 => {
-                let mut req = client.get(url);
+        let req = match method {
+            0 => Some(client.get(url)),
+            1 => Some(client.post(url)),
+            _ => None,
+        };
 
-                if !body_status {
-                    req = req.body(body);
-                }
+        if let Some(r) = req {
+            let mut r = r;
 
-                req.send().await.unwrap().text().await.unwrap()
+            // 设置请求参数
+            if !body_status {
+                r = r.body(body);
             }
-            1 => {
-                let mut req = client.post(url);
 
-                if !body_status {
-                    req = req.body(body);
-                }
-
-                req.send().await.unwrap().text().await.unwrap()
+            // 设置请求参数
+            if let Some(v) = params {
+                r = r.query(&v);
             }
-            _ => String::new(),
+
+            return r.send().await.unwrap().text().await.unwrap();
         }
+
+        String::new()
     });
 
     // println!("{}", resp);
