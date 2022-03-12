@@ -214,7 +214,7 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HeaderMap> {
                             *map,
                             "get",
                             format!("({}){}", JAVA_CLASS_OBJECT, JAVA_CLASS_OBJECT),
-                            &[JValue::from(env.new_string(&_k[..]).unwrap())],
+                            &[JValue::from(env.new_string(_k.as_str()).unwrap())],
                         )
                         .unwrap()
                         .l()
@@ -225,7 +225,7 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HeaderMap> {
 
                     headers.insert(
                         HeaderName::from_bytes(_k.as_bytes()).unwrap(),
-                        HeaderValue::from_str(&_v[..]).unwrap(),
+                        HeaderValue::from_str(_v.as_str()).unwrap(),
                     );
                 }
             }

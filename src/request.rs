@@ -1,3 +1,4 @@
+use crate::util::{self};
 use jni::objects::{JClass, JValue};
 use jni::sys::{jboolean, jobject, JNI_TRUE};
 use jni::{
@@ -5,7 +6,6 @@ use jni::{
     sys::jstring,
     JNIEnv,
 };
-use crate::util::{self};
 
 #[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests_getMap(env: JNIEnv, class: JClass) -> jobject {
