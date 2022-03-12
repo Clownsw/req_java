@@ -38,15 +38,11 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     http_request: JObject,
 ) -> jobject {
     let url = util::get_jstring_to_string(&env, "url", &http_request);
-    // println!("url = {}", url);
 
     let method = util::get_jint_to_i32(&env, "method", &http_request);
-    // println!("method = {}", method);
 
     let body = util::get_jstring_to_string(&env, "body", &http_request);
     let body_status = body.eq("");
-
-    // println!("body: {}", body);
 
     let headers = util::parse_hash_map(
         &env,
@@ -99,7 +95,6 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
         String::new()
     });
 
-    // println!("{}", resp);
     let resp_obj = util::new_response_object(&env);
 
     env.set_field(

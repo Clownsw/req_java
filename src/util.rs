@@ -197,7 +197,6 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
                 .unwrap();
 
             let mut headers = HashMap::new();
-            // let mut headers: HeaderMap = HeaderMap::new();
 
             for _ in 0..size {
                 let k: JString = env
@@ -224,10 +223,6 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
 
                     let _v = jstring_to_string(env, &v);
 
-                    // headers.insert(
-                    //     HeaderName::from_bytes(_k.as_bytes()).unwrap(),
-                    //     HeaderValue::from_str(_v.as_str()).unwrap(),
-                    // );
                     headers.insert(_k, _v);
                 }
             }
