@@ -3,7 +3,7 @@ package cn.smilex.req;
 /**
  * @author smilex
  */
-public class Requests {
+public final class Requests {
 
     static {
         synchronized (Requests.class) {
@@ -11,6 +11,11 @@ public class Requests {
             init();
         }
     }
+
+    private Requests() {
+    }
+
+    public static Requests requests = new Requests();
 
     public enum REQUEST_METHOD {
         GET,
@@ -37,6 +42,5 @@ public class Requests {
     private static native void init();
 
     private static native String _fast_request(String url, boolean isPost);
-
     private static native HttpResponse _request(HttpRequest req);
 }

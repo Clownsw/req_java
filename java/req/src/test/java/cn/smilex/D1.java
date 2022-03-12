@@ -10,17 +10,11 @@ import org.junit.Test;
  */
 public class D1 {
 
-    static {
-        System.loadLibrary("req_java");
-    }
-
     /**
      * 测试请求
      */
     @Test
     public void testRequest() {
-        Requests req = new Requests();
-
         HttpRequest httpRequest = HttpRequest.build()
                 .setUrl("http://localhost:8080/test")
                 .setMethod(Requests.REQUEST_METHOD.GET)
@@ -31,15 +25,14 @@ public class D1 {
                 .addParam("name", "x")
                 .addParam("age", "100");
 
-        HttpResponse resp = req.request(httpRequest);
-        System.out.println(resp.getBody());
+        HttpResponse resp = Requests.requests.request(httpRequest);
+        System.out.println(resp);
     }
 
     @Test
     public void testFastRequest() {
-        Requests req = new Requests();
 
-        System.out.println(req.fast_get("https://www.baidu.com/"));
-        System.out.println(req.fast_post("https://www.smilex.cn/"));
+        System.out.println(Requests.requests.fast_get("https://www.baidu.com/"));
+        System.out.println(Requests.requests.fast_post("https://www.smilex.cn/"));
     }
 }

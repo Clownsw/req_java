@@ -2,11 +2,13 @@ use jni::objects::{GlobalRef, JObject, JString, JValue};
 use jni::sys::jint;
 use jni::JNIEnv;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
+use reqwest::Version;
 use std::collections::HashMap;
 use std::future::Future;
 use std::sync::Mutex;
 
 pub const JAVA_TYPE_INT: &'static str = "I";
+pub const JAVA_TYPE_LONG: &'static str = "J";
 
 pub const JAVA_CLASS_OBJECT: &'static str = "Ljava/lang/Object;";
 pub const JAVA_CLASS_STRING: &'static str = "Ljava/lang/String;";
@@ -245,4 +247,15 @@ pub fn hash_map_to_header_map(map: HashMap<String, String>) -> HeaderMap {
     }
 
     m
+}
+
+pub fn version_to_str(version: Version) -> String {
+    match version {
+        Version::HTTP_09 => "HTTP_0.9".to_string(),
+        Version::HTTP_10 => "HTTP_1.0".to_string(),
+        Version::HTTP_11 => "HTTP_1.1".to_string(),
+        Version::HTTP_2 => "HTTP_2".to_string(),
+        Version::HTTP_3 => "HTTP_3".to_string(),
+        _ => String::new(),
+    }
 }

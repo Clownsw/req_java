@@ -1,6 +1,6 @@
 use crate::util::{self};
 use jni::objects::{JClass, JValue};
-use jni::sys::{jboolean, jobject, JNI_TRUE};
+use jni::sys::{jboolean, jlong, jobject, JNI_TRUE};
 use jni::{
     objects::{JObject, JString},
     sys::jstring,
@@ -89,21 +89,70 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
                 r = r.query(&v);
             }
 
-            return r.send().await.unwrap().text().await.unwrap();
+            return Some(r.send().await.unwrap());
         }
-
-        String::new()
+        None
     });
 
     let resp_obj = util::new_response_object(&env);
 
-    env.set_field(
-        resp_obj,
-        "body",
-        util::JAVA_CLASS_STRING,
-        JValue::from(JObject::from(env.new_string(resp).unwrap().into_inner())),
-    )
-    .unwrap();
+    if let Some(v) = resp {
+        util::run_async(async {
+            let status_code = v.status();
+            let version = util::version_to_str(v.version());
+            let content_length = v.content_length().unwrap();
+            let remote_address = v.remote_addr().unwrap().to_string();
+
+            let body = v.text().await.unwrap();
+
+            // 设置状态码
+            env.set_field(
+                resp_obj,
+                "statusCode",
+                util::JAVA_CLASS_STRING,
+                JValue::from(JObject::from(
+                    env.new_string(status_code.as_str()).unwrap().into_inner(),
+                )),
+            )
+            .unwrap();
+
+            // 设置HTTP版本
+            env.set_field(
+                resp_obj,
+                "version",
+                util::JAVA_CLASS_STRING,
+                JValue::from(JObject::from(env.new_string(version).unwrap().into_inner())),
+            )
+            .unwrap();
+
+            // 设置响应正文长度
+            env.set_field(
+                resp_obj,
+                "contentLength",
+                util::JAVA_TYPE_LONG,
+                JValue::from(jlong::from(content_length as i64)),
+            )
+            .unwrap();
+
+            // 设置远程地址
+            env.set_field(
+                resp_obj,
+                "remoteAddress",
+                util::JAVA_CLASS_STRING,
+                JValue::from(JObject::from(env.new_string(remote_address).unwrap())),
+            )
+            .unwrap();
+
+            // 设置body
+            env.set_field(
+                resp_obj,
+                "body",
+                util::JAVA_CLASS_STRING,
+                JValue::from(JObject::from(env.new_string(body).unwrap().into_inner())),
+            )
+            .unwrap();
+        });
+    }
 
     env.delete_local_ref(*class).unwrap();
 
