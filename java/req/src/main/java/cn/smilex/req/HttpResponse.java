@@ -1,6 +1,7 @@
 package cn.smilex.req;
 
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 
 /**
  * 响应对象
@@ -11,13 +12,13 @@ public class HttpResponse {
     private String statusCode;
     private String body;
     private String version;
-    private HashMap<String, String> headers;
+    private IdentityHashMap<String, String> headers;
     private HashMap<String, String> cookies;
     private long contentLength;
     private String remoteAddress;
 
     public HttpResponse() {
-        headers = new HashMap<>();
+        headers = new IdentityHashMap<>();
         cookies = new HashMap<>();
     }
 
@@ -35,7 +36,7 @@ public class HttpResponse {
         this.version = version;
     }
 
-    public void setHeaders(HashMap<String, String> headers) {
+    public void setHeaders(IdentityHashMap<String, String> headers) {
         this.headers = headers;
     }
 
@@ -64,7 +65,7 @@ public class HttpResponse {
         return version;
     }
 
-    public HashMap<String, String> getHeaders() {
+    public IdentityHashMap<String, String> getHeaders() {
         return headers;
     }
 

@@ -13,6 +13,7 @@ pub const JAVA_TYPE_LONG: &'static str = "J";
 pub const JAVA_CLASS_OBJECT: &'static str = "Ljava/lang/Object;";
 pub const JAVA_CLASS_STRING: &'static str = "Ljava/lang/String;";
 pub const JAVA_CLASS_HASH_MAP: &'static str = "Ljava/util/HashMap;";
+pub const JAVA_CLASS_IDENTITY_HASH_MAP: &'static str = "Ljava/util/IdentityHashMap;";
 pub const JAVA_CLASS_SET: &'static str = "Ljava/util/Set;";
 pub const JAVA_CLASS_ITERATOR: &'static str = "Ljava/util/Iterator;";
 
@@ -50,6 +51,10 @@ pub fn init(env: &JNIEnv) {
         .new_global_ref(env.find_class(JAVA_CLASS_HASH_MAP).unwrap())
         .unwrap();
 
+    let identity_hash_map_class = env
+        .new_global_ref(env.find_class(JAVA_CLASS_IDENTITY_HASH_MAP).unwrap())
+        .unwrap();
+
     let set_class = env
         .new_global_ref(env.find_class(JAVA_CLASS_SET).unwrap())
         .unwrap();
@@ -71,6 +76,7 @@ pub fn init(env: &JNIEnv) {
     classes.insert("Object", object_class);
     classes.insert("String", string_class);
     classes.insert("HashMap", hash_map_class);
+    classes.insert("IdentityHashMap", identity_hash_map_class);
     classes.insert("Set", set_class);
     classes.insert("Iterator", iterator_class);
     classes.insert("HttpRequest", http_request_class);
@@ -236,6 +242,9 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
     None
 }
 
+///
+/// HashMap to HeaderMap
+///
 pub fn hash_map_to_header_map(map: HashMap<String, String>) -> HeaderMap {
     let mut m = HeaderMap::new();
 
@@ -257,5 +266,14 @@ pub fn version_to_str(version: Version) -> String {
         Version::HTTP_2 => "HTTP_2".to_string(),
         Version::HTTP_3 => "HTTP_3".to_string(),
         _ => String::new(),
+    }
+}
+
+pub fn for_header_map<T>(map: &HeaderMap, f: T)
+where
+    T: Fn((&HeaderName, &HeaderValue)) -> (),
+{
+    for item in map.iter() {
+        f(item);
     }
 }

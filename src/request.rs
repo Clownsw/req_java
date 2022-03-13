@@ -60,7 +60,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             .unwrap(),
     );
 
-    let mut client_builder = reqwest::ClientBuilder::new();
+    let mut client_builder = reqwest::ClientBuilder::new().cookie_store(true);
 
     // 处理请求头
     if let Some(v) = headers {
@@ -102,6 +102,34 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             let version = util::version_to_str(v.version());
             let content_length = v.content_length().unwrap();
             let remote_address = v.remote_addr().unwrap().to_string();
+
+            // 设置响应头
+            util::for_header_map(v.headers(), |item| {
+                let header_name = item.0.as_str();
+                let header_value = item.1.to_str().unwrap();
+
+                let headers = env
+                    .get_field(resp_obj, "headers", util::JAVA_CLASS_IDENTITY_HASH_MAP)
+                    .unwrap()
+                    .l()
+                    .unwrap();
+
+                env.call_method(
+                    headers,
+                    "put",
+                    format!(
+                        "({}{}){}",
+                        util::JAVA_CLASS_OBJECT,
+                        util::JAVA_CLASS_OBJECT,
+                        util::JAVA_CLASS_OBJECT
+                    ),
+                    &[
+                        JValue::from(JObject::from(env.new_string(header_name).unwrap())),
+                        JValue::from(JObject::from(env.new_string(header_value).unwrap())),
+                    ],
+                )
+                .unwrap();
+            });
 
             let body = v.text().await.unwrap();
 
