@@ -1,9 +1,12 @@
 package cn.smilex;
 
+import cn.smilex.req.Cookie;
 import cn.smilex.req.HttpRequest;
 import cn.smilex.req.HttpResponse;
 import cn.smilex.req.Requests;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * @author smilex
@@ -26,7 +29,23 @@ public class D1 {
                 .addParam("age", "100");
 
         HttpResponse resp = Requests.requests.request(httpRequest);
-        System.out.println(resp);
+        System.out.println(resp.getCookies());
+    }
+
+    @Test
+    public void testRequest2() {
+        HttpRequest httpRequest = HttpRequest.build()
+                .setMethod(Requests.REQUEST_METHOD.GET)
+                .setUrl("https://www.baidu.com");
+
+        HttpResponse resp = Requests.requests.request(httpRequest);
+
+        System.out.println(resp.getHeaders());
+
+        List<Cookie> cookies = resp.getCookies();
+        for (Cookie cookie : cookies) {
+            System.out.println(cookie);
+        }
     }
 
     @Test

@@ -1,6 +1,6 @@
 package cn.smilex.req;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * 工具类
@@ -63,5 +63,63 @@ public final class RequestUtil {
         }
 
         return str.toString();
+    }
+
+    public static List<Cookie> parseHeaderCookie(HttpResponse map) {
+        List<Cookie> cookies = new ArrayList<>();
+        IdentityHashMap<String, String> headers = map.getHeaders();
+
+        for (String key : headers.keySet()) {
+            var value = headers.get(key);
+
+            if (key.equals("set-cookie") || key.equals("Set-Cookie")) {
+                String[] split = value.split(";");
+                Cookie cookie = new Cookie();
+
+                if (split.length > 0) {
+
+                    int i = 0;
+                    for (String s : split) {
+                        String[] split1 = s.split("=");
+
+                        String k = split1[0].trim();
+                        String v = split1[1].trim();
+
+                        i++;
+
+                        if (i == 1) {
+                            cookie.setName(k);
+                            cookie.setValue(v);
+                            continue;
+                        }
+
+                        switch (k) {
+                            case "domain":
+                            case "Domain":
+                                cookie.setDoMain(v);
+                                break;
+
+                            case "max-age":
+                            case "Max-Age":
+                                cookie.setMaxAge(Integer.parseInt(v));
+                                break;
+                            case "expires":
+                            case "Expires":
+                                cookie.setExpires(v);
+                                break;
+
+                            case "path":
+                            case "Path":
+                                cookie.setPath(v);
+                                break;
+                        }
+                    }
+
+                    cookies.add(cookie);
+                }
+            }
+        }
+
+        return cookies;
     }
 }

@@ -36,11 +36,15 @@ public final class Requests {
         var m = req.getHeaders();
         m.remove("cookie");
         m.put("cookie", RequestUtil.cookiesToStr(req.getCookies()));
-        return _request(req);
+
+        HttpResponse response = _request(req);
+        response.setCookies(RequestUtil.parseHeaderCookie(response));
+        return response;
     }
 
     private static native void init();
 
     private static native String _fast_request(String url, boolean isPost);
+
     private static native HttpResponse _request(HttpRequest req);
 }

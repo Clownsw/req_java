@@ -1,7 +1,8 @@
 package cn.smilex.req;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.List;
 
 /**
  * 响应对象
@@ -13,13 +14,13 @@ public class HttpResponse {
     private String body;
     private String version;
     private IdentityHashMap<String, String> headers;
-    private HashMap<String, String> cookies;
+    private List<Cookie> cookies;
     private long contentLength;
     private String remoteAddress;
 
     public HttpResponse() {
         headers = new IdentityHashMap<>();
-        cookies = new HashMap<>();
+        cookies = new ArrayList<>();
     }
 
     /* set */
@@ -44,7 +45,7 @@ public class HttpResponse {
         this.contentLength = contentLength;
     }
 
-    public void setCookies(HashMap<String, String> cookies) {
+    public void setCookies(List<Cookie> cookies) {
         this.cookies = cookies;
     }
 
@@ -73,13 +74,14 @@ public class HttpResponse {
         return contentLength;
     }
 
-    public HashMap<String, String> getCookies() {
+    public List<Cookie> getCookies() {
         return cookies;
     }
 
     public String getRemoteAddress() {
         return remoteAddress;
     }
+
 
     @Override
     public String toString() {

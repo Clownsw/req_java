@@ -73,6 +73,8 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
         let req = match method {
             0 => Some(client.get(url)),
             1 => Some(client.post(url)),
+            2 => Some(client.put(url)),
+            3 => Some(client.delete(url)),
             _ => None,
         };
 
