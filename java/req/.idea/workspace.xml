@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1715c0cf-4b95-461d-a6d9-fbe6b3456d40" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/HttpResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/HttpResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/RequestUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/RequestUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/Requests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/Requests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/cn/smilex/D1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cn/smilex/D1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/request.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/request.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +171,7 @@
       <workItem from="1647048299729" duration="933000" />
       <workItem from="1647080911783" duration="6733000" />
       <workItem from="1647102980342" duration="4479000" />
-      <workItem from="1647142038077" duration="6094000" />
+      <workItem from="1647142038077" duration="6343000" />
     </task>
     <servers />
   </component>

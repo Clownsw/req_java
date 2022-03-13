@@ -82,7 +82,7 @@ public final class RequestUtil {
                     for (String s : split) {
                         String[] split1 = s.split("=");
 
-                        String k = split1[0].trim();
+                        String k = split1[0].trim().toLowerCase();
                         String v = split1[1].trim();
 
                         i++;
@@ -95,21 +95,17 @@ public final class RequestUtil {
 
                         switch (k) {
                             case "domain":
-                            case "Domain":
                                 cookie.setDoMain(v);
                                 break;
 
                             case "max-age":
-                            case "Max-Age":
                                 cookie.setMaxAge(Integer.parseInt(v));
                                 break;
                             case "expires":
-                            case "Expires":
                                 cookie.setExpires(v);
                                 break;
 
                             case "path":
-                            case "Path":
                                 cookie.setPath(v);
                                 break;
                         }
