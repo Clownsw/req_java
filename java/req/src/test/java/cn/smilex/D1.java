@@ -1,12 +1,9 @@
 package cn.smilex;
 
-import cn.smilex.req.Cookie;
 import cn.smilex.req.HttpRequest;
 import cn.smilex.req.HttpResponse;
 import cn.smilex.req.Requests;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * @author smilex
@@ -41,12 +38,22 @@ public class D1 {
 
         HttpResponse resp = Requests.requests.request(httpRequest);
 
-//        System.out.println(resp);
+        System.out.println(resp);
 //        System.out.println(resp.getHeaders());
-        List<Cookie> cookies = resp.getCookies();
-        for (Cookie cookie : cookies) {
-            System.out.println(cookie);
-        }
+//        List<Cookie> cookies = resp.getCookies();
+//        for (Cookie cookie : cookies) {
+//            System.out.println(cookie);
+//        }
+    }
+
+    @Test
+    public void redirectTest() {
+        HttpRequest httpRequest = HttpRequest.build()
+                .setMethod(Requests.REQUEST_METHOD.GET)
+                .setUrl("https://rustc.ml/eXyZSn/");
+
+        HttpResponse response = Requests.requests.request(httpRequest);
+        System.out.println(response.getBody());
     }
 
     @Test

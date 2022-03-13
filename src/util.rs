@@ -9,11 +9,13 @@ use std::sync::Mutex;
 
 pub const JAVA_TYPE_INT: &'static str = "I";
 pub const JAVA_TYPE_LONG: &'static str = "J";
+pub const JAVA_TYPE_BOOLEAN: &'static str = "Z";
 
 pub const JAVA_CLASS_OBJECT: &'static str = "Ljava/lang/Object;";
 pub const JAVA_CLASS_STRING: &'static str = "Ljava/lang/String;";
 pub const JAVA_CLASS_HASH_MAP: &'static str = "Ljava/util/HashMap;";
 pub const JAVA_CLASS_IDENTITY_HASH_MAP: &'static str = "Ljava/util/IdentityHashMap;";
+pub const JAVA_CLASS_LIST: &'static str = "Ljava/util/List;";
 pub const JAVA_CLASS_SET: &'static str = "Ljava/util/Set;";
 pub const JAVA_CLASS_ITERATOR: &'static str = "Ljava/util/Iterator;";
 

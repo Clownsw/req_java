@@ -15,12 +15,14 @@ public class HttpResponse {
     private String version;
     private IdentityHashMap<String, String> headers;
     private List<Cookie> cookies;
+    private List<String> redirectUrls;
     private long contentLength;
     private String remoteAddress;
 
     public HttpResponse() {
         headers = new IdentityHashMap<>();
         cookies = new ArrayList<>();
+        redirectUrls = new ArrayList<>();
     }
 
     /* set */
@@ -53,6 +55,10 @@ public class HttpResponse {
         this.remoteAddress = remoteAddress;
     }
 
+    public void setRedirectUrls(List<String> redirectUrls) {
+        this.redirectUrls = redirectUrls;
+    }
+
     /* get */
     public String getBody() {
         return body;
@@ -82,6 +88,9 @@ public class HttpResponse {
         return remoteAddress;
     }
 
+    public List<String> getRedirectUrls() {
+        return redirectUrls;
+    }
 
     @Override
     public String toString() {
@@ -91,6 +100,7 @@ public class HttpResponse {
                 ", version='" + version + '\'' +
                 ", headers=" + headers +
                 ", cookies=" + cookies +
+                ", redirectUrls=" + redirectUrls +
                 ", contentLength=" + contentLength +
                 ", remoteAddress='" + remoteAddress + '\'' +
                 '}';

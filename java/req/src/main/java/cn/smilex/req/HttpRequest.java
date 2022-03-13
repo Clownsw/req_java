@@ -14,6 +14,7 @@ public class HttpRequest {
     private HashMap<String, String> params;
     private HashMap<String, String> headers;
     private HashMap<String, String> cookies;
+    private int maxRedirect;
 
     private HttpRequest() {
         this.method = 0;
@@ -21,6 +22,7 @@ public class HttpRequest {
         params = new HashMap<>();
         headers = new HashMap<>();
         cookies = new HashMap<>();
+        maxRedirect = 3;
     }
 
     public static HttpRequest build() {
@@ -73,6 +75,11 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest setMaxRedirect(int maxRedirect) {
+        this.maxRedirect = maxRedirect;
+        return this;
+    }
+
     /* GET */
     public Requests.REQUEST_METHOD getMethod() {
         return RequestUtil.intToRequestMethodEnum(this.method);
@@ -96,5 +103,9 @@ public class HttpRequest {
 
     public HashMap<String, String> getParams() {
         return params;
+    }
+
+    public int getMaxRedirect() {
+        return maxRedirect;
     }
 }

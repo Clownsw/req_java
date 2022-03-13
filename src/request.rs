@@ -1,3 +1,5 @@
+use std::sync::{Arc, Mutex};
+
 use crate::util::{self};
 use jni::objects::{JClass, JValue};
 use jni::sys::{jboolean, jlong, jobject, JNI_TRUE};
@@ -61,7 +63,25 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             .unwrap(),
     );
 
-    let mut client_builder = reqwest::ClientBuilder::new().cookie_store(true);
+    let max_redirect: usize = util::get_jint_to_i32(&env, "maxRedirect", &http_request) as usize;
+
+    let redirect_url_list: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(Vec::new()));
+
+    let redirect_url_list_clone = redirect_url_list.clone();
+
+    let mut client_builder = reqwest::ClientBuilder::new()
+        .redirect(reqwest::redirect::Policy::custom(move |attempt| {
+            // 将重定向url保存起来
+            (*redirect_url_list_clone.lock().unwrap()).push(attempt.url().to_string());
+
+            // 如果重定向次数大于最大重定向次数则停止
+            if attempt.previous().len() > max_redirect {
+                return attempt.stop();
+            }
+
+            attempt.follow()
+        }))
+        .cookie_store(true);
 
     // 处理请求头
     if let Some(v) = headers {
@@ -70,6 +90,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
 
     let client = client_builder.build().unwrap();
 
+    // 开始处理响应信息
     let resp_obj = util::new_response_object(&env);
 
     let mut status_code = StatusCode::from_u16(500).unwrap();
@@ -193,42 +214,26 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     )
     .unwrap();
 
+    // 设置重定向URL列表
+    let redirect_url_lists = env
+        .get_field(resp_obj, "redirectUrls", util::JAVA_CLASS_LIST)
+        .unwrap()
+        .l()
+        .unwrap();
+
+    for item in redirect_url_list.lock().unwrap().iter() {
+        env.call_method(
+            redirect_url_lists,
+            "add",
+            format!("({}){}", util::JAVA_CLASS_OBJECT, util::JAVA_TYPE_BOOLEAN),
+            &[JValue::from(JObject::from(
+                env.new_string(item).unwrap().into_inner(),
+            ))],
+        )
+        .unwrap();
+    }
+
     env.delete_local_ref(*class).unwrap();
 
     resp_obj.into_inner()
 }
-
-// #[no_mangle]
-// pub extern "system" fn Java_cn_smilex_req_Requests_req_1get(
-//     env: JNIEnv,
-//     obj: JObject,
-//     url: JString,
-// ) -> jstring {
-//     let mut _url: String;
-//     let mut text: String = String::new();
-
-//     if !url.is_null() {
-//         _url = env.get_string(url).unwrap().into();
-
-//         text = util::run_async(async {
-//             let custom = reqwest::redirect::Policy::custom(|attempt| attempt.stop());
-
-//             reqwest::ClientBuilder::new()
-//                 .redirect(custom)
-//                 .build()
-//                 .unwrap()
-//                 .get(_url)
-//                 .send()
-//                 .await
-//                 .unwrap()
-//                 .text()
-//                 .await
-//                 .unwrap()
-//         });
-//     }
-
-//     env.delete_local_ref(obj).unwrap();
-//     env.delete_local_ref(*url).unwrap();
-
-//     env.new_string(text).unwrap().into_inner()
-// }
