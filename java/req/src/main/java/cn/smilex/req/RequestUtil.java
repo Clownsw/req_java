@@ -82,6 +82,10 @@ public final class RequestUtil {
                     for (String s : split) {
                         String[] split1 = s.split("=");
 
+                        if (split1.length == 1) {
+                            continue;
+                        }
+
                         String k = split1[0].trim().toLowerCase();
                         String v = split1[1].trim();
 
@@ -110,7 +114,6 @@ public final class RequestUtil {
                                 break;
                         }
                     }
-
                     cookies.add(cookie);
                 }
             }

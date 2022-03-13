@@ -36,12 +36,13 @@ public class D1 {
     public void testRequest2() {
         HttpRequest httpRequest = HttpRequest.build()
                 .setMethod(Requests.REQUEST_METHOD.GET)
-                .setUrl("https://www.baidu.com");
+                .setUrl("https://www.smilex.cn/");
+//                .setUrl("https://www.baidu.com/");
 
         HttpResponse resp = Requests.requests.request(httpRequest);
 
-        System.out.println(resp.getHeaders());
-
+//        System.out.println(resp);
+//        System.out.println(resp.getHeaders());
         List<Cookie> cookies = resp.getCookies();
         for (Cookie cookie : cookies) {
             System.out.println(cookie);

@@ -6,6 +6,7 @@ use jni::{
     sys::jstring,
     JNIEnv,
 };
+use reqwest::StatusCode;
 
 #[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests_init(env: JNIEnv, class: JClass) {
@@ -69,7 +70,15 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
 
     let client = client_builder.build().unwrap();
 
-    let resp = util::run_async(async {
+    let resp_obj = util::new_response_object(&env);
+
+    let mut status_code = StatusCode::from_u16(500).unwrap();
+    let mut version = String::new();
+    let mut content_length = 0i64;
+    let mut remote_address = String::new();
+    let mut resp_body = String::new();
+
+    util::run_async(async {
         let req = match method {
             0 => Some(client.get(url)),
             1 => Some(client.post(url)),
@@ -91,22 +100,20 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
                 r = r.query(&v);
             }
 
-            return Some(r.send().await.unwrap());
-        }
-        None
-    });
+            let resp = r.send().await.unwrap();
+            status_code = resp.status();
+            version = util::version_to_str(resp.version());
 
-    let resp_obj = util::new_response_object(&env);
+            if let Some(v) = resp.content_length() {
+                content_length = v as i64;
+            }
 
-    if let Some(v) = resp {
-        util::run_async(async {
-            let status_code = v.status();
-            let version = util::version_to_str(v.version());
-            let content_length = v.content_length().unwrap();
-            let remote_address = v.remote_addr().unwrap().to_string();
+            if let Some(v) = resp.remote_addr() {
+                remote_address = v.to_string();
+            }
 
             // 设置响应头
-            util::for_header_map(v.headers(), |item| {
+            util::for_header_map(resp.headers(), |item| {
                 let header_name = item.0.as_str();
                 let header_value = item.1.to_str().unwrap();
 
@@ -133,56 +140,58 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
                 .unwrap();
             });
 
-            let body = v.text().await.unwrap();
+            resp_body = resp.text().await.unwrap();
+        }
+    });
 
-            // 设置状态码
-            env.set_field(
-                resp_obj,
-                "statusCode",
-                util::JAVA_CLASS_STRING,
-                JValue::from(JObject::from(
-                    env.new_string(status_code.as_str()).unwrap().into_inner(),
-                )),
-            )
-            .unwrap();
+    // 设置响应体
+    env.set_field(
+        resp_obj,
+        "body",
+        util::JAVA_CLASS_STRING,
+        JValue::from(JObject::from(
+            env.new_string(resp_body).unwrap().into_inner(),
+        )),
+    )
+    .unwrap();
 
-            // 设置HTTP版本
-            env.set_field(
-                resp_obj,
-                "version",
-                util::JAVA_CLASS_STRING,
-                JValue::from(JObject::from(env.new_string(version).unwrap().into_inner())),
-            )
-            .unwrap();
+    // 设置状态码
+    env.set_field(
+        resp_obj,
+        "statusCode",
+        util::JAVA_CLASS_STRING,
+        JValue::from(JObject::from(
+            env.new_string(status_code.as_str()).unwrap().into_inner(),
+        )),
+    )
+    .unwrap();
 
-            // 设置响应正文长度
-            env.set_field(
-                resp_obj,
-                "contentLength",
-                util::JAVA_TYPE_LONG,
-                JValue::from(jlong::from(content_length as i64)),
-            )
-            .unwrap();
+    // 设置HTTP版本
+    env.set_field(
+        resp_obj,
+        "version",
+        util::JAVA_CLASS_STRING,
+        JValue::from(JObject::from(env.new_string(version).unwrap().into_inner())),
+    )
+    .unwrap();
 
-            // 设置远程地址
-            env.set_field(
-                resp_obj,
-                "remoteAddress",
-                util::JAVA_CLASS_STRING,
-                JValue::from(JObject::from(env.new_string(remote_address).unwrap())),
-            )
-            .unwrap();
+    // 设置响应正文长度
+    env.set_field(
+        resp_obj,
+        "contentLength",
+        util::JAVA_TYPE_LONG,
+        JValue::from(jlong::from(content_length)),
+    )
+    .unwrap();
 
-            // 设置body
-            env.set_field(
-                resp_obj,
-                "body",
-                util::JAVA_CLASS_STRING,
-                JValue::from(JObject::from(env.new_string(body).unwrap().into_inner())),
-            )
-            .unwrap();
-        });
-    }
+    // 设置远程地址
+    env.set_field(
+        resp_obj,
+        "remoteAddress",
+        util::JAVA_CLASS_STRING,
+        JValue::from(JObject::from(env.new_string(remote_address).unwrap())),
+    )
+    .unwrap();
 
     env.delete_local_ref(*class).unwrap();
 

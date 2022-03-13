@@ -38,6 +38,9 @@ public final class Requests {
         m.put("cookie", RequestUtil.cookiesToStr(req.getCookies()));
 
         HttpResponse response = _request(req);
+        if (response.getContentLength() == 0) {
+            response.setContentLength(response.getBody().length());
+        }
         response.setCookies(RequestUtil.parseHeaderCookie(response));
         return response;
     }
