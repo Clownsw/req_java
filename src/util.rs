@@ -127,10 +127,18 @@ pub fn fast_request(url: String, is_post: bool) -> String {
     let client = reqwest::Client::new();
 
     run_async(async {
+        let resp;
+
         if is_post {
-            return client.post(url).send().await.unwrap().text().await.unwrap();
+            resp = client.post(url).send().await;
+        } else {
+            resp = client.get(url).send().await;
         }
-        client.get(url).send().await.unwrap().text().await.unwrap()
+
+        match resp {
+            Ok(v) => v.text().await.unwrap(),
+            Err(e) => e.to_string(),
+        }
     })
 }
 

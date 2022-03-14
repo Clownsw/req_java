@@ -50,10 +50,12 @@ public class D1 {
     public void redirectTest() {
         HttpRequest httpRequest = HttpRequest.build()
                 .setMethod(Requests.REQUEST_METHOD.GET)
-                .setUrl("https://rustc.ml/eXyZSn/");
+                .setUrl("https://h5.pipix.com/s/NrGdANK/")
+                .setMaxRedirect(0);
 
         HttpResponse response = Requests.requests.request(httpRequest);
         System.out.println(response.getBody());
+        System.out.println(response.getRedirectUrls());
     }
 
     @Test
