@@ -12,7 +12,7 @@ use reqwest::StatusCode;
 
 #[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests_init(env: JNIEnv, class: JClass) {
-    util::init(&env);
+    // util::init(&env);
     env.delete_local_ref(*class).unwrap();
 }
 
