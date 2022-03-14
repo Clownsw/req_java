@@ -38,54 +38,6 @@ pub fn run_async<F: Future>(f: F) -> F::Output {
 }
 
 ///
-/// 初始化
-///
-pub fn init(env: &JNIEnv) {
-    let object_class = env
-        .new_global_ref(env.find_class(JAVA_CLASS_OBJECT).unwrap())
-        .unwrap();
-
-    let string_class = env
-        .new_global_ref(env.find_class(JAVA_CLASS_STRING).unwrap())
-        .unwrap();
-
-    let hash_map_class = env
-        .new_global_ref(env.find_class(JAVA_CLASS_HASH_MAP).unwrap())
-        .unwrap();
-
-    let identity_hash_map_class = env
-        .new_global_ref(env.find_class(JAVA_CLASS_IDENTITY_HASH_MAP).unwrap())
-        .unwrap();
-
-    let set_class = env
-        .new_global_ref(env.find_class(JAVA_CLASS_SET).unwrap())
-        .unwrap();
-
-    let iterator_class = env
-        .new_global_ref(env.find_class(JAVA_CLASS_ITERATOR).unwrap())
-        .unwrap();
-
-    let http_request_class = env
-        .new_global_ref(env.find_class(JAVA_CLASS_HTTP_REQUEST).unwrap())
-        .unwrap();
-
-    let http_response_class = env
-        .new_global_ref(env.find_class(JAVA_CLASS_HTTP_RESPONSE).unwrap())
-        .unwrap();
-
-    let mut classes = CLASSES.lock().unwrap();
-
-    classes.insert("Object", object_class);
-    classes.insert("String", string_class);
-    classes.insert("HashMap", hash_map_class);
-    classes.insert("IdentityHashMap", identity_hash_map_class);
-    classes.insert("Set", set_class);
-    classes.insert("Iterator", iterator_class);
-    classes.insert("HttpRequest", http_request_class);
-    classes.insert("HttpResponse", http_response_class);
-}
-
-///
 /// 从CLASSES通过key获取全局引用
 ///
 pub fn get_global_referener(key: &str) -> Option<GlobalRef> {

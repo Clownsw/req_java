@@ -8,7 +8,6 @@ public final class Requests {
     static {
         synchronized (Requests.class) {
             System.loadLibrary("req_java");
-            init();
         }
     }
 
@@ -44,8 +43,6 @@ public final class Requests {
         response.setCookies(RequestUtil.parseHeaderCookie(response));
         return response;
     }
-
-    private static native void init();
 
     private static native String _fast_request(String url, boolean isPost);
 

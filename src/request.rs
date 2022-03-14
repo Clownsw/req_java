@@ -11,12 +11,6 @@ use jni::{
 use reqwest::StatusCode;
 
 #[no_mangle]
-pub extern "system" fn Java_cn_smilex_req_Requests_init(env: JNIEnv, class: JClass) {
-    // util::init(&env);
-    env.delete_local_ref(*class).unwrap();
-}
-
-#[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests__1fast_1request(
     env: JNIEnv,
     class: JClass,
