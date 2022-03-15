@@ -20,3 +20,4 @@ crate-type = ["cdylib"]
 lto = true
 debug = false
 opt-level = 3
+strip = true
