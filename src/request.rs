@@ -35,13 +35,15 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     http_request: JObject,
 ) -> jobject {
     // 请求URL
-    let url = util::get_jstring_to_string(&env, "url", &http_request);
+    let _url = util::get_jstring(&env, "url", &http_request);
+    let url = util::get_jstring_to_string(&env, &_url);
 
     // 请求方式
     let method = util::get_jint_to_i32(&env, "method", &http_request);
 
     // 请求体
-    let body = util::get_jstring_to_string(&env, "body", &http_request);
+    let _body = util::get_jstring(&env, "body", &http_request);
+    let body = util::get_jstring_to_string(&env, &_body);
     let body_status = body.eq("");
 
     // 请求头
@@ -171,6 +173,13 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             }
         }
     });
+
+    // 释放字符串
+    let _url_ptr = env.get_string_utf_chars(_url).unwrap();
+    env.release_string_utf_chars(_url, _url_ptr).unwrap();
+
+    let _body_ptr = env.get_string_utf_chars(_body).unwrap();
+    env.release_string_utf_chars(_body, _body_ptr).unwrap();
 
     // 设置响应体
     env.set_field(

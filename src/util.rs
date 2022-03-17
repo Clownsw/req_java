@@ -102,12 +102,18 @@ pub fn jstring_to_string(env: &JNIEnv, obj: &JString) -> String {
 }
 
 ///
+/// 获取JString
+///
+pub fn get_jstring<'a>(env: &'a JNIEnv, name: &'static str, obj: &'a JObject) -> JString<'a> {
+    let tmp1: JValue = env.get_field(*obj, name, JAVA_CLASS_STRING).unwrap();
+    tmp1.l().unwrap().into()
+}
+
+///
 /// 获取JString并将其转换为 String
 ///
-pub fn get_jstring_to_string(env: &JNIEnv, name: &'static str, obj: &JObject) -> String {
-    let tmp1: JValue = env.get_field(*obj, name, JAVA_CLASS_STRING).unwrap();
-    let tmp2: JString = tmp1.l().unwrap().into();
-    env.get_string(tmp2).unwrap().into()
+pub fn get_jstring_to_string<'a>(env: &'a JNIEnv, str: &JString<'a>) -> String {
+    env.get_string(*str).unwrap().into()
 }
 
 ///
