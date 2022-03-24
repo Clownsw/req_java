@@ -1,5 +1,7 @@
 package cn.smilex.req;
 
+import java.util.HashMap;
+
 /**
  * @author smilex
  */
@@ -32,7 +34,7 @@ public final class Requests {
     }
 
     public HttpResponse request(HttpRequest req) {
-        var m = req.getHeaders();
+        HashMap<String, String> m = req.getHeaders();
         m.remove("cookie");
         m.put("cookie", RequestUtil.cookiesToStr(req.getCookies()));
 

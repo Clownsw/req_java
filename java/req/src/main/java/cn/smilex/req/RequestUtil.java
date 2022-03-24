@@ -70,7 +70,7 @@ public final class RequestUtil {
         IdentityHashMap<String, String> headers = map.getHeaders();
 
         for (String key : headers.keySet()) {
-            var value = headers.get(key);
+            String value = headers.get(key);
 
             if (key.equals("set-cookie") || key.equals("Set-Cookie")) {
                 String[] split = value.split(";");
