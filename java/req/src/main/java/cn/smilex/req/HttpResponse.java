@@ -18,6 +18,7 @@ public class HttpResponse {
     private List<String> redirectUrls;
     private long contentLength;
     private String remoteAddress;
+    private byte[] dataByte;
 
     public HttpResponse() {
         headers = new IdentityHashMap<>();
@@ -59,6 +60,10 @@ public class HttpResponse {
         this.redirectUrls = redirectUrls;
     }
 
+    public void setDataByte(byte[] dataByte) {
+        this.dataByte = dataByte;
+    }
+
     /* get */
     public String getBody() {
         return body;
@@ -90,6 +95,10 @@ public class HttpResponse {
 
     public List<String> getRedirectUrls() {
         return redirectUrls;
+    }
+
+    public byte[] getDataByte() {
+        return dataByte;
     }
 
     @Override

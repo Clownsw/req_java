@@ -1,6 +1,7 @@
 use std::sync::{Arc, Mutex};
 
 use crate::util::{self};
+use bytes::Bytes;
 use jni::objects::{JClass, JValue};
 use jni::sys::{jboolean, jlong, jobject, JNI_TRUE};
 use jni::{
@@ -34,6 +35,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     class: JClass,
     http_request: JObject,
 ) -> jobject {
+
     // 请求URL
     let _url = util::get_jstring(&env, "url", &http_request);
     let url = util::get_jstring_to_string(&env, &_url);
@@ -45,6 +47,13 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     let _body = util::get_jstring(&env, "body", &http_request);
     let body = util::get_jstring_to_string(&env, &_body);
     let body_status = body.eq("");
+
+    // 是否开启获取bytes
+    let enable_data_byte = env
+        .get_field(http_request, "enableDataByte", util::JAVA_TYPE_BOOLEAN)
+        .unwrap()
+        .z()
+        .unwrap();
 
     // 请求头
     let headers = util::parse_hash_map(
@@ -100,6 +109,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     let mut version = String::new();
     let mut content_length = 0i64;
     let mut remote_address = String::new();
+    let mut data_byte: Bytes = Bytes::new();
     let mut resp_body = String::new();
 
     util::run_async(async {
@@ -167,7 +177,11 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
                     .unwrap();
                 });
 
-                resp_body = resp.text().await.unwrap();
+                if enable_data_byte {
+                    data_byte = resp.bytes().await.unwrap();
+                } else {
+                    resp_body = resp.text().await.unwrap();
+                }
             } else if let Err(err) = resp {
                 resp_body = err.to_string();
             }
@@ -182,15 +196,17 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     env.release_string_utf_chars(_body, _body_ptr).unwrap();
 
     // 设置响应体
-    env.set_field(
-        resp_obj,
-        "body",
-        util::JAVA_CLASS_STRING,
-        JValue::from(JObject::from(
-            env.new_string(resp_body).unwrap().into_inner(),
-        )),
-    )
-    .unwrap();
+    if !enable_data_byte {
+        env.set_field(
+            resp_obj,
+            "body",
+            util::JAVA_CLASS_STRING,
+            JValue::from(JObject::from(
+                env.new_string(resp_body).unwrap().into_inner(),
+            )),
+        )
+        .unwrap();
+    }
 
     // 设置状态码
     env.set_field(
@@ -245,6 +261,19 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             &[JValue::from(JObject::from(
                 env.new_string(item).unwrap().into_inner(),
             ))],
+        )
+        .unwrap();
+    }
+
+    // 设置响应数据
+    if enable_data_byte {
+        env.set_field(
+            resp_obj,
+            "dataByte",
+            format!("[{}", util::JAVA_TYPE_BYTE),
+            JValue::from(JObject::from(
+                env.byte_array_from_slice(&data_byte[..]).unwrap(),
+            )),
         )
         .unwrap();
     }

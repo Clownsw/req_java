@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1715c0cf-4b95-461d-a6d9-fbe6b3456d40" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/req_java.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/HttpRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/HttpResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/HttpResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/cn/smilex/D1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cn/smilex/D1.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../src/request.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/request.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../src/util.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/util.rs" afterDir="false" />
     </list>
@@ -57,29 +57,16 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="JUnit.D1.testRequest">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.D1.testDownloadImage">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="D1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="req" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cn.smilex.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="cn.smilex" />
-      <option name="MAIN_CLASS_NAME" value="cn.smilex.D1" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -100,7 +87,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="D1.testFastRequest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="D1.testDownloadAudio" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="req" />
       <extension name="coverage">
         <pattern>
@@ -110,7 +97,23 @@
       </extension>
       <option name="PACKAGE_NAME" value="cn.smilex" />
       <option name="MAIN_CLASS_NAME" value="cn.smilex.D1" />
-      <option name="METHOD_NAME" value="testFastRequest" />
+      <option name="METHOD_NAME" value="testDownloadAudio" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="D1.testDownloadImage" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="req" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cn.smilex.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cn.smilex" />
+      <option name="MAIN_CLASS_NAME" value="cn.smilex.D1" />
+      <option name="METHOD_NAME" value="testDownloadImage" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -150,11 +153,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.D1.testDownloadImage" />
+        <item itemvalue="JUnit.D1.testDownloadAudio" />
         <item itemvalue="JUnit.D1.testRequest" />
         <item itemvalue="JUnit.D1.redirectTest" />
         <item itemvalue="JUnit.D1.testRequest2" />
-        <item itemvalue="JUnit.D1" />
-        <item itemvalue="JUnit.D1.testFastRequest" />
       </list>
     </recent_temporary>
   </component>
@@ -187,6 +190,7 @@
       <workItem from="1647218526547" duration="138000" />
       <workItem from="1647262923794" duration="251000" />
       <workItem from="1647490267830" duration="1066000" />
+      <workItem from="1648121706250" duration="3133000" />
     </task>
     <servers />
   </component>

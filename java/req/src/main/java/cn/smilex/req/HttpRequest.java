@@ -15,6 +15,7 @@ public class HttpRequest {
     private HashMap<String, String> headers;
     private HashMap<String, String> cookies;
     private int maxRedirect;
+    private boolean enableDataByte;
 
     private HttpRequest() {
         this.method = 0;
@@ -23,6 +24,7 @@ public class HttpRequest {
         headers = new HashMap<>();
         cookies = new HashMap<>();
         maxRedirect = 3;
+        enableDataByte = false;
     }
 
     public static HttpRequest build() {
@@ -80,6 +82,11 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest setEnableDataByte(boolean enableDataByte) {
+        this.enableDataByte = enableDataByte;
+        return this;
+    }
+
     /* GET */
     public Requests.REQUEST_METHOD getMethod() {
         return RequestUtil.intToRequestMethodEnum(this.method);
@@ -108,4 +115,6 @@ public class HttpRequest {
     public int getMaxRedirect() {
         return maxRedirect;
     }
+
+
 }

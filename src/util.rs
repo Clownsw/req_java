@@ -7,6 +7,7 @@ use std::collections::HashMap;
 use std::future::Future;
 use std::sync::Mutex;
 
+pub const JAVA_TYPE_BYTE: &'static str = "B";
 pub const JAVA_TYPE_INT: &'static str = "I";
 pub const JAVA_TYPE_LONG: &'static str = "J";
 pub const JAVA_TYPE_BOOLEAN: &'static str = "Z";
