@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1715c0cf-4b95-461d-a6d9-fbe6b3456d40" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/req.iml" beforeDir="false" afterPath="$PROJECT_DIR$/req.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/RequestUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/RequestUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/Requests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/Requests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,9 +146,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.D1.testDownloadImage" />
+        <item itemvalue="JUnit.D1.testDownloadAudio" />
         <item itemvalue="JUnit.D1.testRequest2" />
         <item itemvalue="JUnit.D1.redirectTest" />
-        <item itemvalue="JUnit.D1.testDownloadAudio" />
         <item itemvalue="JUnit.D1.testRequest" />
       </list>
     </recent_temporary>
@@ -189,6 +184,7 @@
       <workItem from="1647490267830" duration="1066000" />
       <workItem from="1648121706250" duration="3602000" />
       <workItem from="1648126991780" duration="171000" />
+      <workItem from="1648188656816" duration="1454000" />
     </task>
     <servers />
   </component>

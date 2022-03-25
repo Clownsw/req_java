@@ -8,7 +8,7 @@ authors = ["Smilex <msmliexx1@gmail.com>"]
 
 [dependencies]
 libc = "0.2.119"
-reqwest = { version = "0.11", features = ["blocking", "cookies", "json", "multipart"] }
+reqwest = { version = "0.11", features = ["cookies", "json", "multipart", "rustls", "rustls-native-certs"] }
 tokio = { version = "1", features = ["full"] }
 jni = "0.19.0"
 lazy_static = "1.4.0"
