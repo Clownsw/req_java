@@ -16,7 +16,13 @@ public final class Requests {
     private Requests() {
     }
 
+    private static final HashMap<String, String> DEFAULT_HEADER = new HashMap<>();
     public static Requests requests = new Requests();
+
+    static {
+        DEFAULT_HEADER.put("content-type", "application/x-www-form-urlencoded");
+        DEFAULT_HEADER.put("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36");
+    }
 
     public enum REQUEST_METHOD {
         GET,
@@ -25,12 +31,22 @@ public final class Requests {
         PUT,
     }
 
-    public String fast_get(String url) {
-        return Requests._fast_request(url, false);
+    public HttpResponse fast_get(String url) {
+        return request(
+                HttpRequest.build()
+                        .setUrl(url)
+                        .setMethod(REQUEST_METHOD.GET)
+                        .setHeaders(DEFAULT_HEADER)
+        );
     }
 
-    public String fast_post(String url) {
-        return _fast_request(url, true);
+    public HttpResponse fast_post(String url) {
+        return request(
+                HttpRequest.build()
+                        .setUrl(url)
+                        .setMethod(REQUEST_METHOD.POST)
+                        .setHeaders(DEFAULT_HEADER)
+        );
     }
 
     public HttpResponse request(HttpRequest req) {
@@ -45,8 +61,6 @@ public final class Requests {
         response.setCookies(RequestUtil.parseHeaderCookie(response));
         return response;
     }
-
-    private static native String _fast_request(String url, boolean isPost);
 
     private static native HttpResponse _request(HttpRequest req);
 }

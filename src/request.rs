@@ -3,31 +3,9 @@ use std::sync::{Arc, Mutex};
 use crate::util::{self};
 use bytes::Bytes;
 use jni::objects::{JClass, JValue};
-use jni::sys::{jboolean, jlong, jobject, JNI_TRUE};
-use jni::{
-    objects::{JObject, JString},
-    sys::jstring,
-    JNIEnv,
-};
+use jni::sys::{jlong, jobject};
+use jni::{objects::JObject, JNIEnv};
 use reqwest::StatusCode;
-
-#[no_mangle]
-pub extern "system" fn Java_cn_smilex_req_Requests__1fast_1request(
-    env: JNIEnv,
-    class: JClass,
-    url: JString,
-    is_post: jboolean,
-) -> jstring {
-    let _url = util::jstring_to_string(&env, &url);
-    let _is_post = if is_post == JNI_TRUE { true } else { false };
-
-    let resp_text = util::fast_request(_url, _is_post);
-
-    env.delete_local_ref(*class).unwrap();
-    env.delete_local_ref(*url).unwrap();
-
-    env.new_string(resp_text).unwrap().into_inner()
-}
 
 #[no_mangle]
 pub extern "system" fn Java_cn_smilex_req_Requests__1request(
@@ -35,7 +13,6 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     class: JClass,
     http_request: JObject,
 ) -> jobject {
-
     // 请求URL
     let _url = util::get_jstring(&env, "url", &http_request);
     let url = util::get_jstring_to_string(&env, &_url);
