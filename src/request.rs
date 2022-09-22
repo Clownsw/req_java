@@ -21,9 +21,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     let method = util::get_jint_to_i32(&env, "method", &http_request);
 
     // 请求体
-    let _body = util::get_jstring(&env, "body", &http_request);
-    let body = util::get_jstring_to_string(&env, &_body);
-    let body_status = body.eq("");
+    let body = util::get_request_body(&env, &http_request);
 
     // 是否开启获取bytes
     let enable_data_byte = env
@@ -100,8 +98,8 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
 
         if let Some(mut r) = req {
             // 设置请求参数
-            if !body_status {
-                r = r.body(body);
+            if let Some(v) = body {
+                r = r.body(v);
             }
 
             // 设置请求参数
@@ -168,9 +166,6 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     // 释放字符串
     let _url_ptr = env.get_string_utf_chars(_url).unwrap();
     env.release_string_utf_chars(_url, _url_ptr).unwrap();
-
-    let _body_ptr = env.get_string_utf_chars(_body).unwrap();
-    env.release_string_utf_chars(_body, _body_ptr).unwrap();
 
     // 设置响应体
     if !enable_data_byte {

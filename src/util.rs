@@ -22,6 +22,9 @@ pub const JAVA_CLASS_ITERATOR: &'static str = "Ljava/util/Iterator;";
 
 pub const JAVA_CLASS_HTTP_REQUEST: &'static str = "Lcn/smilex/req/HttpRequest;";
 pub const JAVA_CLASS_HTTP_RESPONSE: &'static str = "Lcn/smilex/req/HttpResponse;";
+pub const JAVA_CLASS_HTTP_BODY_INTERFACE: &'static str = "Lcn/smilex/req/HttpBodyInterface;";
+pub const JAVA_CLASS_HTTP_STRING_BODY: &'static str = "Lcn/smilex/req/HttpStringBody;";
+pub const JAVA_CLASS_HTTP_BYTE_ARR_BODY: &'static str = "Lcn/smilex/req/HttpByteArrBody;";
 
 lazy_static! {
     pub static ref CLASSES: Mutex<HashMap<&'static str, GlobalRef>> = Mutex::new(HashMap::new());
@@ -244,5 +247,44 @@ where
 {
     for item in map.iter() {
         f(item);
+    }
+}
+
+pub fn get_request_body<'a>(env: &JNIEnv, obj: &JObject) -> Option<Vec<u8>> {
+    let obj = env
+        .get_field(*obj, "body", JAVA_CLASS_HTTP_BODY_INTERFACE)
+        .unwrap()
+        .l()
+        .unwrap();
+
+    if obj.is_null() {
+        return None;
+    }
+
+    if !env
+        .is_instance_of(*(&obj), JAVA_CLASS_HTTP_BODY_INTERFACE)
+        .unwrap()
+    {
+        return None;
+    }
+
+    if env
+        .is_instance_of(obj, JAVA_CLASS_HTTP_STRING_BODY)
+        .unwrap()
+    {
+        let content = jstring_to_string(env, &get_jstring(env, "content", &obj));
+        return Some(content.as_bytes().to_vec());
+    } else {
+        let array = env
+            .get_field(obj, "content", "[B")
+            .unwrap()
+            .l()
+            .unwrap()
+            .into_inner();
+        let array_length = env.get_array_length(array).unwrap();
+
+        let mut arr = vec![0; array_length as usize];
+        env.get_byte_array_region(array, 0, &mut arr).unwrap();
+        Some(unsafe { std::slice::from_raw_parts(arr.as_ptr() as *const u8, arr.len()).to_vec() })
     }
 }
