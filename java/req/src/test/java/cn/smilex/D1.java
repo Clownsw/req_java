@@ -1,11 +1,11 @@
 package cn.smilex;
 
-import cn.smilex.req.HttpRequest;
-import cn.smilex.req.HttpResponse;
-import cn.smilex.req.Requests;
+import cn.smilex.req.*;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * @author smilex
@@ -99,5 +99,21 @@ public class D1 {
         fos.write(httpResponse.getDataByte(), 0, httpResponse.getDataByte().length);
         fos.flush();
         fos.close();
+    }
+
+    @Test
+    public void HttpBodyClassTest() {
+        Class<HttpBodyInterface> httpBodyInterfaceClass = HttpBodyInterface.class;
+
+        HttpBodyInterface stringBody = HttpBodyBuilder.ofString("h");
+        System.out.println(stringBody.getClass());
+
+        HttpBodyInterface byteArrBody = HttpBodyBuilder.ofByteArrBody("h".getBytes());
+        System.out.println(byteArrBody.getClass());
+
+        System.out.println(httpBodyInterfaceClass.isInstance(stringBody));
+        System.out.println(httpBodyInterfaceClass.isInstance(byteArrBody));
+        System.out.println(httpBodyInterfaceClass.isInstance("test"));
+
     }
 }
