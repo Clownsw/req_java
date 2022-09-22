@@ -261,20 +261,16 @@ pub fn get_request_body<'a>(env: &JNIEnv, obj: &JObject) -> Option<Vec<u8>> {
         return None;
     }
 
-    if !env
-        .is_instance_of(*(&obj), JAVA_CLASS_HTTP_BODY_INTERFACE)
-        .unwrap()
-    {
-        return None;
-    }
-
     if env
         .is_instance_of(obj, JAVA_CLASS_HTTP_STRING_BODY)
         .unwrap()
     {
         let content = jstring_to_string(env, &get_jstring(env, "content", &obj));
         return Some(content.as_bytes().to_vec());
-    } else {
+    } else if env
+        .is_instance_of(obj, JAVA_CLASS_HTTP_BYTE_ARR_BODY)
+        .unwrap()
+    {
         let array = env
             .get_field(obj, "content", "[B")
             .unwrap()
@@ -285,6 +281,10 @@ pub fn get_request_body<'a>(env: &JNIEnv, obj: &JObject) -> Option<Vec<u8>> {
 
         let mut arr = vec![0; array_length as usize];
         env.get_byte_array_region(array, 0, &mut arr).unwrap();
-        Some(unsafe { std::slice::from_raw_parts(arr.as_ptr() as *const u8, arr.len()).to_vec() })
+        return Some(unsafe {
+            std::slice::from_raw_parts(arr.as_ptr() as *const u8, arr.len()).to_vec()
+        });
     }
+
+    None
 }
