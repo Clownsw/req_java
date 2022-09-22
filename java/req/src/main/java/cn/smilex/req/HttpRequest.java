@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class HttpRequest {
     private int method;
     private String url;
-    private String body;
+    private HttpBodyInterface body;
     private HashMap<String, String> params;
     private HashMap<String, String> headers;
     private HashMap<String, String> cookies;
@@ -19,7 +19,7 @@ public class HttpRequest {
 
     private HttpRequest() {
         this.method = 0;
-        body = "";
+        this.body = null;
         params = new HashMap<>();
         headers = new HashMap<>();
         cookies = new HashMap<>();
@@ -31,7 +31,9 @@ public class HttpRequest {
         return new HttpRequest();
     }
 
-    /* SET */
+    /**
+     * SET
+     */
     public HttpRequest setMethod(Requests.REQUEST_METHOD method) {
         this.method = RequestUtil.requestMethodEnumToInt(method);
         return this;
@@ -42,7 +44,7 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest setBody(String body) {
+    public HttpRequest setBody(HttpBodyInterface body) {
         this.body = body;
         return this;
     }
@@ -87,7 +89,9 @@ public class HttpRequest {
         return this;
     }
 
-    /* GET */
+    /**
+     * GET
+     */
     public Requests.REQUEST_METHOD getMethod() {
         return RequestUtil.intToRequestMethodEnum(this.method);
     }
@@ -96,7 +100,7 @@ public class HttpRequest {
         return url;
     }
 
-    public String getBody() {
+    public HttpBodyInterface getBody() {
         return body;
     }
 
