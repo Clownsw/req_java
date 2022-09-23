@@ -42,63 +42,6 @@ pub fn run_async<F: Future>(f: F) -> F::Output {
 }
 
 ///
-/// 从CLASSES通过key获取全局引用
-///
-pub fn get_global_referener(key: &str) -> Option<GlobalRef> {
-    match CLASSES.lock().unwrap().get(&key) {
-        Some(v) => Some(v.clone()),
-        None => None,
-    }
-}
-
-///
-/// 向CLASSES添加全局引用
-///
-pub fn add_global_referener<'a, O: Into<JObject<'a>>>(
-    env: &'a JNIEnv,
-    key: &'static str,
-    o: O,
-) -> GlobalRef {
-    let r = env.new_global_ref(o).unwrap();
-    let r_c = r.clone();
-
-    CLASSES.lock().unwrap().insert(key, r);
-    r_c
-}
-
-///
-/// 对add_global_referener方法的封装, 使得调用该方法的代码更加简洁
-///
-pub fn get_global_ref(env: &JNIEnv, key: &'static str, class_name: &'static str) -> GlobalRef {
-    match get_global_referener(key) {
-        Some(v) => v,
-        None => add_global_referener(&env, key, env.find_class(class_name).unwrap()),
-    }
-}
-
-///
-/// 快速请求(快速是指没有其他附加参数和检查)
-///
-pub fn fast_request(url: String, is_post: bool) -> String {
-    let client = reqwest::Client::new();
-
-    run_async(async {
-        let resp;
-
-        if is_post {
-            resp = client.post(url).send().await;
-        } else {
-            resp = client.get(url).send().await;
-        }
-
-        match resp {
-            Ok(v) => v.text().await.unwrap(),
-            Err(e) => e.to_string(),
-        }
-    })
-}
-
-///
 /// 将JString并将其转换为 String
 ///
 pub fn jstring_to_string(env: &JNIEnv, obj: &JString) -> String {
