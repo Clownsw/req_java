@@ -1,5 +1,6 @@
 package cn.smilex.req;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 
 /**
@@ -49,10 +50,13 @@ public final class Requests {
         );
     }
 
-    public HttpResponse request(HttpRequest req) {
-        HashMap<String, String> m = req.getHeaders();
-        m.remove("cookie");
-        m.put("cookie", RequestUtil.cookiesToStr(req.getCookies()));
+    public HttpResponse request(@NotNull HttpRequest req) {
+        if (req.getUrl() == null || req.getUrl().isBlank() || req.getMethod() == null) {
+            return null;
+        }
+
+        var headers = req.getHeaders();
+        headers.put("cookie", RequestUtil.cookiesToStr(req.getCookies()));
 
         HttpResponse response = _request(req);
         if (response.getContentLength() == 0) {

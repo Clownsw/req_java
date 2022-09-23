@@ -23,7 +23,7 @@ public class D1 {
                 .addHeader("a", "b")
                 .addCookie("name", "x")
                 .addCookie("age", "100")
-//                .setBody("this is Body")
+                .setBody(HttpBodyBuilder.ofString("this is Body"))
                 .addParam("name", "x")
                 .addParam("age", "100");
 
