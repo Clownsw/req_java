@@ -59,9 +59,19 @@ public final class Requests {
         headers.put("cookie", RequestUtil.cookiesToStr(req.getCookies()));
 
         HttpResponse response = _request(req);
-        if (response.getContentLength() == 0) {
-            response.setContentLength(response.getBody().length());
+
+
+        try {
+            if (response.getContentLength() == 0) {
+                if (req.isEnableDataByte()) {
+                    response.setContentLength(response.getDataByte().length);
+                } else {
+                    response.setContentLength(response.getBody().length());
+                }
+            }
+        } catch (Exception ignored) {
         }
+
         response.setCookies(RequestUtil.parseHeaderCookie(response));
         return response;
     }

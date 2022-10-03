@@ -120,5 +120,7 @@ public class HttpRequest {
         return maxRedirect;
     }
 
-
+    public boolean isEnableDataByte() {
+        return enableDataByte;
+    }
 }
