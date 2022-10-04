@@ -121,7 +121,12 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
 
             let mut headers = HashMap::new();
 
-            for _ in 0..size {
+            while env
+                .call_method(*(&iter), "hasNext", "()Z", &[])
+                .unwrap()
+                .z()
+                .unwrap()
+            {
                 let k: JString = env
                     .call_method(*(&iter), "next", format!("(){}", JAVA_CLASS_OBJECT), &[])
                     .unwrap()

@@ -1,6 +1,6 @@
 [package]
 name = "req_java"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
 authors = ["Smilex <msmliexx1@gmail.com>"]
 
