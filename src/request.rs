@@ -56,7 +56,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
 
     let redirect_url_list_clone = redirect_url_list.clone();
 
-    let mut client_builder = reqwest::ClientBuilder::new()
+    let mut client_builder = reqwest::blocking::ClientBuilder::new()
         .redirect(reqwest::redirect::Policy::custom(move |attempt| {
             // 将重定向url保存起来
             (*redirect_url_list_clone.lock().unwrap()).push(attempt.url().to_string());
@@ -87,81 +87,79 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     let mut data_byte: Bytes = Bytes::new();
     let mut resp_body = String::new();
 
-    util::run_async(async {
-        let req = match method {
-            0 => Some(client.get(url)),
-            1 => Some(client.post(url)),
-            2 => Some(client.put(url)),
-            3 => Some(client.delete(url)),
-            _ => None,
-        };
+    let req = match method {
+        0 => Some(client.get(url)),
+        1 => Some(client.post(url)),
+        2 => Some(client.put(url)),
+        3 => Some(client.delete(url)),
+        _ => None,
+    };
 
-        if let Some(mut r) = req {
-            // 设置请求参数
-            if let Some(v) = body {
-                r = r.body(v);
-            }
-
-            // 设置请求参数
-            if let Some(v) = params {
-                r = r.query(&v);
-            }
-
-            // 发送请求
-            let resp = r.send().await;
-
-            // 如果成功则设置响应数据
-            // 否则将错误信息传回body
-            if let Ok(resp) = resp {
-                status_code = resp.status();
-                version = util::version_to_str(resp.version());
-
-                if let Some(v) = resp.content_length() {
-                    content_length = v as i64;
-                }
-
-                if let Some(v) = resp.remote_addr() {
-                    remote_address = v.to_string();
-                }
-
-                // 设置响应头
-                util::for_header_map(resp.headers(), |item| {
-                    let header_name = item.0.as_str();
-                    let header_value = item.1.to_str().unwrap();
-
-                    let headers = env
-                        .get_field(resp_obj, "headers", util::JAVA_CLASS_IDENTITY_HASH_MAP)
-                        .unwrap()
-                        .l()
-                        .unwrap();
-
-                    env.call_method(
-                        headers,
-                        "put",
-                        format!(
-                            "({}{}){}",
-                            util::JAVA_CLASS_OBJECT,
-                            util::JAVA_CLASS_OBJECT,
-                            util::JAVA_CLASS_OBJECT
-                        ),
-                        &[
-                            JValue::from(JObject::from(env.new_string(header_name).unwrap())),
-                            JValue::from(JObject::from(env.new_string(header_value).unwrap())),
-                        ],
-                    )
-                    .unwrap();
-                });
-
-                if enable_data_byte {
-                    data_byte = resp.bytes().await.unwrap();
-                } else {
-                    resp_body = resp.text().await.unwrap();
-                }
-            } else if let Err(err) = resp {
-                resp_body = err.to_string();
-            }
+    if let Some(mut r) = req {
+        // 设置请求参数
+        if let Some(v) = body {
+            r = r.body(v);
         }
-    });
+
+        // 设置请求参数
+        if let Some(v) = params {
+            r = r.query(&v);
+        }
+
+        // 发送请求
+        let resp = r.send();
+
+        // 如果成功则设置响应数据
+        // 否则将错误信息传回body
+        if let Ok(resp) = resp {
+            status_code = resp.status();
+            version = util::version_to_str(resp.version());
+
+            if let Some(v) = resp.content_length() {
+                content_length = v as i64;
+            }
+
+            if let Some(v) = resp.remote_addr() {
+                remote_address = v.to_string();
+            }
+
+            // 设置响应头
+            util::for_header_map(resp.headers(), |item| {
+                let header_name = item.0.as_str();
+                let header_value = item.1.to_str().unwrap();
+
+                let headers = env
+                    .get_field(resp_obj, "headers", util::JAVA_CLASS_IDENTITY_HASH_MAP)
+                    .unwrap()
+                    .l()
+                    .unwrap();
+
+                env.call_method(
+                    headers,
+                    "put",
+                    format!(
+                        "({}{}){}",
+                        util::JAVA_CLASS_OBJECT,
+                        util::JAVA_CLASS_OBJECT,
+                        util::JAVA_CLASS_OBJECT
+                    ),
+                    &[
+                        JValue::from(JObject::from(env.new_string(header_name).unwrap())),
+                        JValue::from(JObject::from(env.new_string(header_value).unwrap())),
+                    ],
+                )
+                .unwrap();
+            });
+
+            if enable_data_byte {
+                data_byte = resp.bytes().unwrap();
+            } else {
+                resp_body = resp.text().unwrap();
+            }
+        } else if let Err(err) = resp {
+            resp_body = err.to_string();
+        }
+    }
 
     // 释放字符串
     let _url_ptr = env.get_string_utf_chars(_url).unwrap();

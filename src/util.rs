@@ -4,7 +4,6 @@ use jni::JNIEnv;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use reqwest::Version;
 use std::collections::HashMap;
-use std::future::Future;
 use std::sync::Mutex;
 
 pub const JAVA_TYPE_BYTE: &'static str = "B";
@@ -28,17 +27,6 @@ pub const JAVA_CLASS_HTTP_BYTE_ARR_BODY: &'static str = "Lcn/smilex/req/HttpByte
 
 lazy_static! {
     pub static ref CLASSES: Mutex<HashMap<&'static str, GlobalRef>> = Mutex::new(HashMap::new());
-}
-
-///
-/// 提供异步执行环境
-///
-pub fn run_async<F: Future>(f: F) -> F::Output {
-    tokio::runtime::Builder::new_multi_thread()
-        .enable_all()
-        .build()
-        .unwrap()
-        .block_on(f)
 }
 
 ///
