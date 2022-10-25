@@ -19,6 +19,8 @@ pub const JAVA_CLASS_LIST: &'static str = "Ljava/util/List;";
 pub const JAVA_CLASS_SET: &'static str = "Ljava/util/Set;";
 pub const JAVA_CLASS_ITERATOR: &'static str = "Ljava/util/Iterator;";
 
+pub const JAVA_CLASS_RUNTIME_EXCEPTION: &'static str = "Ljava/lang/RuntimeException";
+
 pub const JAVA_CLASS_HTTP_REQUEST: &'static str = "Lcn/smilex/req/HttpRequest;";
 pub const JAVA_CLASS_HTTP_RESPONSE: &'static str = "Lcn/smilex/req/HttpResponse;";
 pub const JAVA_CLASS_HTTP_BODY_INTERFACE: &'static str = "Lcn/smilex/req/HttpBodyInterface;";
