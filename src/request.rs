@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 use crate::error_code;
 use crate::util::{self};
@@ -53,14 +53,14 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     let max_redirect: usize = util::get_jint_to_i32(&env, "maxRedirect", &http_request) as usize;
 
     // 重定向URL列表
-    let redirect_url_list: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(Vec::new()));
+    let redirect_url_list: Arc<RwLock<Vec<String>>> = Arc::new(RwLock::new(Vec::new()));
 
     let redirect_url_list_clone = redirect_url_list.clone();
 
     let mut client_builder = reqwest::blocking::ClientBuilder::new()
         .redirect(reqwest::redirect::Policy::custom(move |attempt| {
             // 将重定向url保存起来
-            (*redirect_url_list_clone.lock().unwrap()).push(attempt.url().to_string());
+            (*redirect_url_list_clone.write().unwrap()).push(attempt.url().to_string());
 
             // 如果重定向次数大于最大重定向次数则停止
             if attempt.previous().len() > max_redirect {
@@ -232,7 +232,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
         .l()
         .unwrap();
 
-    for item in redirect_url_list.lock().unwrap().iter() {
+    for item in redirect_url_list.read().unwrap().iter() {
         env.call_method(
             redirect_url_lists,
             "add",
