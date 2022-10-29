@@ -1,10 +1,9 @@
-use jni::objects::{GlobalRef, JObject, JString, JValue};
+use jni::objects::{JObject, JString, JValue};
 use jni::sys::jint;
 use jni::JNIEnv;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use reqwest::Version;
 use std::collections::HashMap;
-use std::sync::Mutex;
 
 pub const JAVA_TYPE_BYTE: &'static str = "B";
 pub const JAVA_TYPE_INT: &'static str = "I";
@@ -26,10 +25,6 @@ pub const JAVA_CLASS_HTTP_RESPONSE: &'static str = "Lcn/smilex/req/HttpResponse;
 pub const JAVA_CLASS_HTTP_BODY_INTERFACE: &'static str = "Lcn/smilex/req/HttpBodyInterface;";
 pub const JAVA_CLASS_HTTP_STRING_BODY: &'static str = "Lcn/smilex/req/HttpStringBody;";
 pub const JAVA_CLASS_HTTP_BYTE_ARR_BODY: &'static str = "Lcn/smilex/req/HttpByteArrBody;";
-
-lazy_static! {
-    pub static ref CLASSES: Mutex<HashMap<&'static str, GlobalRef>> = Mutex::new(HashMap::new());
-}
 
 ///
 /// 将JString并将其转换为 String
