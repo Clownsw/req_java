@@ -8,7 +8,7 @@ authors = ["Smilex <msmliexx1@gmail.com>"]
 
 [dependencies]
 libc = "0.2.119"
-reqwest = { version = "0.11", features = ["cookies", "json", "multipart", "rustls", "rustls-native-certs", "blocking"] }
+reqwest = { version = "0.11", features = ["cookies", "json", "rustls", "rustls-native-certs", "blocking"] }
 jni = "0.19.0"
 bytes = "1.1.0"
 
@@ -20,3 +20,4 @@ lto = true
 debug = false
 opt-level = 3
 strip = true
+panic = 'abort'
