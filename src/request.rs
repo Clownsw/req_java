@@ -173,7 +173,10 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
         if enable_data_byte {
             data_byte = resp.bytes().unwrap();
         } else {
-            resp_body = resp.text().unwrap();
+            resp_body = match resp.text() {
+                Ok(v) => v,
+                Err(e) => e.to_string(),
+            };
         }
     } else if let Err(err) = resp {
         resp_body = err.to_string();
