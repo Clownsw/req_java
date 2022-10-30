@@ -1,5 +1,5 @@
 use jni::objects::{JObject, JString, JValue};
-use jni::sys::jint;
+use jni::sys::{jint, jlong};
 use jni::JNIEnv;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use reqwest::Version;
@@ -54,6 +54,11 @@ pub fn get_jstring_to_string<'a>(env: &'a JNIEnv, str: &JString<'a>) -> String {
 pub fn get_jint_to_i32(env: &JNIEnv, name: &'static str, obj: &JObject) -> jint {
     let tmp1: JValue = env.get_field(*obj, name, JAVA_TYPE_INT).unwrap();
     tmp1.i().unwrap()
+}
+
+pub fn get_jlong_to_i64(env: &JNIEnv, name: &'static str, obj: &JObject) -> jlong {
+    let tmp1: JValue = env.get_field(*obj, name, JAVA_TYPE_LONG).unwrap();
+    tmp1.j().unwrap()
 }
 
 ///

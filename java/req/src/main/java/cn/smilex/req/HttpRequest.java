@@ -1,5 +1,6 @@
 package cn.smilex.req;
 
+import java.time.Duration;
 import java.util.HashMap;
 
 /**
@@ -14,6 +15,7 @@ public class HttpRequest {
     private HashMap<String, String> params;
     private HashMap<String, String> headers;
     private HashMap<String, String> cookies;
+    private long timeOut;
     private int maxRedirect;
     private boolean enableDataByte;
 
@@ -89,6 +91,11 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest setTimeOut(Duration timeOut) {
+        this.timeOut = timeOut.toMillis();
+        return this;
+    }
+
     /**
      * GET
      */
@@ -118,6 +125,10 @@ public class HttpRequest {
 
     public int getMaxRedirect() {
         return maxRedirect;
+    }
+
+    public Duration getTimeOut() {
+        return Duration.ofMillis(this.timeOut);
     }
 
     public boolean isEnableDataByte() {

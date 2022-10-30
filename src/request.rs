@@ -1,4 +1,5 @@
 use std::sync::{Arc, RwLock};
+use std::time::Duration;
 
 use crate::error_code;
 use crate::util::{self};
@@ -23,6 +24,9 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
 
     // 请求体
     let body = util::get_request_body(&env, &http_request);
+
+    // 超时时间
+    let time_out = util::get_jlong_to_i64(&env, "timeOut", &http_request);
 
     // 是否开启获取bytes
     let enable_data_byte = env
@@ -114,6 +118,11 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     // 设置请求参数
     if let Some(v) = params {
         r = r.query(&v);
+    }
+
+    // 设置超时时间
+    if time_out > 0 {
+        r = r.timeout(Duration::from_millis(time_out as u64));
     }
 
     // 发送请求
