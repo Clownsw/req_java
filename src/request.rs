@@ -106,7 +106,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             error_code::ERROR_UNKNOWN_REQUEST_METHOD,
         )
         .unwrap();
-        return resp_obj.into_inner();
+        return resp_obj.into_raw();
     }
 
     let mut r = req.unwrap();
@@ -184,7 +184,9 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
 
     // 释放字符串
     let _url_ptr = env.get_string_utf_chars(_url).unwrap();
-    env.release_string_utf_chars(_url, _url_ptr).unwrap();
+    unsafe {
+        env.release_string_utf_chars(_url, _url_ptr).unwrap();
+    }
 
     // 设置响应体
     if !enable_data_byte {
@@ -192,9 +194,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             resp_obj,
             "body",
             util::JAVA_CLASS_STRING,
-            JValue::from(JObject::from(
-                env.new_string(resp_body).unwrap().into_inner(),
-            )),
+            JValue::from(JObject::from(env.new_string(resp_body).unwrap())),
         )
         .unwrap();
     }
@@ -204,9 +204,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
         resp_obj,
         "statusCode",
         util::JAVA_CLASS_STRING,
-        JValue::from(JObject::from(
-            env.new_string(status_code.as_str()).unwrap().into_inner(),
-        )),
+        JValue::from(JObject::from(env.new_string(status_code.as_str()).unwrap())),
     )
     .unwrap();
 
@@ -215,7 +213,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
         resp_obj,
         "version",
         util::JAVA_CLASS_STRING,
-        JValue::from(JObject::from(env.new_string(version).unwrap().into_inner())),
+        JValue::from(JObject::from(env.new_string(version).unwrap())),
     )
     .unwrap();
 
@@ -249,9 +247,7 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             redirect_url_lists,
             "add",
             format!("({}){}", util::JAVA_CLASS_OBJECT, util::JAVA_TYPE_BOOLEAN),
-            &[JValue::from(JObject::from(
-                env.new_string(item).unwrap().into_inner(),
-            ))],
+            &[JValue::from(JObject::from(env.new_string(item).unwrap()))],
         )
         .unwrap();
     }
@@ -262,14 +258,14 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
             resp_obj,
             "dataByte",
             format!("[{}", util::JAVA_TYPE_BYTE),
-            JValue::from(JObject::from(
-                env.byte_array_from_slice(&data_byte[..]).unwrap(),
-            )),
+            JValue::from(unsafe {
+                JObject::from_raw(env.byte_array_from_slice(&data_byte[..]).unwrap())
+            }),
         )
         .unwrap();
     }
 
     env.delete_local_ref(*class).unwrap();
 
-    resp_obj.into_inner()
+    resp_obj.into_raw()
 }

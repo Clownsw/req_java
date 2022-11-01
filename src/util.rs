@@ -214,7 +214,7 @@ pub fn get_request_body<'a>(env: &JNIEnv, obj: &JObject) -> Option<Vec<u8>> {
             .unwrap()
             .l()
             .unwrap()
-            .into_inner();
+            .into_raw();
         let array_length = env.get_array_length(array).unwrap();
 
         let mut arr = vec![0; array_length as usize];
