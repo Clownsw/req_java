@@ -1,8 +1,7 @@
 package cn.smilex.req;
 
 /**
- * @author YangLuJia
- * @date 2022/9/22 17:06
+ * @author smilex
  */
 public class HttpBodyBuilder {
     private HttpBodyBuilder() {
@@ -12,7 +11,7 @@ public class HttpBodyBuilder {
         return new HttpStringBody(value);
     }
 
-    public static HttpBodyInterface ofByteArrBody(byte[] value) {
+    public static HttpBodyInterface ofByteArr(byte[] value) {
         return new HttpByteArrBody(value);
     }
 }

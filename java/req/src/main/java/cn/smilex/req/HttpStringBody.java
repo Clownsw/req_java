@@ -3,8 +3,7 @@ package cn.smilex.req;
 import java.util.Objects;
 
 /**
- * @author YangLuJia
- * @date 2022/9/22 17:03
+ * @author smilex
  */
 public class HttpStringBody implements HttpBodyInterface {
     private final String content;

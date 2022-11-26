@@ -3,7 +3,7 @@ package cn.smilex.req;
 /**
  * @author smilex
  */
-public class Cookie {
+public class HttpCookie {
     private String name;
     private String value;
     private String doMain;

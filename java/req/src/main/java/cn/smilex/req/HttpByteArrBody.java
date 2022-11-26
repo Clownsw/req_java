@@ -3,8 +3,7 @@ package cn.smilex.req;
 import java.util.Arrays;
 
 /**
- * @author YangLuJia
- * @date 2022/9/22 17:04
+ * @author smilex
  */
 public class HttpByteArrBody implements HttpBodyInterface {
     private final byte[] content;

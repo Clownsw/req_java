@@ -5,8 +5,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 
 /**
- * 响应对象
- *
  * @author smilex
  */
 public class HttpResponse {
@@ -14,7 +12,7 @@ public class HttpResponse {
     private String body;
     private String version;
     private IdentityHashMap<String, String> headers;
-    private List<Cookie> cookies;
+    private List<HttpCookie> httpCookies;
     private List<String> redirectUrls;
     private long contentLength;
     private String remoteAddress;
@@ -22,7 +20,7 @@ public class HttpResponse {
 
     public HttpResponse() {
         headers = new IdentityHashMap<>();
-        cookies = new ArrayList<>();
+        httpCookies = new ArrayList<>();
         redirectUrls = new ArrayList<>();
     }
 
@@ -48,8 +46,8 @@ public class HttpResponse {
         this.contentLength = contentLength;
     }
 
-    public void setCookies(List<Cookie> cookies) {
-        this.cookies = cookies;
+    public void setCookies(List<HttpCookie> httpCookies) {
+        this.httpCookies = httpCookies;
     }
 
     public void setRemoteAddress(String remoteAddress) {
@@ -85,8 +83,8 @@ public class HttpResponse {
         return contentLength;
     }
 
-    public List<Cookie> getCookies() {
-        return cookies;
+    public List<HttpCookie> getCookies() {
+        return httpCookies;
     }
 
     public String getRemoteAddress() {
@@ -108,7 +106,7 @@ public class HttpResponse {
                 ", body='" + body + '\'' +
                 ", version='" + version + '\'' +
                 ", headers=" + headers +
-                ", cookies=" + cookies +
+                ", cookies=" + httpCookies +
                 ", redirectUrls=" + redirectUrls +
                 ", contentLength=" + contentLength +
                 ", remoteAddress='" + remoteAddress + '\'' +

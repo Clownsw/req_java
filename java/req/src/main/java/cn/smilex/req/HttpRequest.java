@@ -4,12 +4,10 @@ import java.time.Duration;
 import java.util.HashMap;
 
 /**
- * 请求对象
- *
  * @author smilex
  */
 public class HttpRequest {
-    private int method;
+    private HttpMethod method;
     private String url;
     private HttpBodyInterface body;
     private HashMap<String, String> params;
@@ -20,7 +18,7 @@ public class HttpRequest {
     private boolean enableDataByte;
 
     private HttpRequest() {
-        this.method = 0;
+        this.method = HttpMethod.GET;
         this.body = null;
         params = new HashMap<>();
         headers = new HashMap<>();
@@ -36,8 +34,8 @@ public class HttpRequest {
     /**
      * SET
      */
-    public HttpRequest setMethod(Requests.REQUEST_METHOD method) {
-        this.method = RequestUtil.requestMethodEnumToInt(method);
+    public HttpRequest setMethod(HttpMethod method) {
+        this.method = method;
         return this;
     }
 
@@ -99,8 +97,8 @@ public class HttpRequest {
     /**
      * GET
      */
-    public Requests.REQUEST_METHOD getMethod() {
-        return RequestUtil.intToRequestMethodEnum(this.method);
+    public HttpMethod getMethod() {
+        return this.method;
     }
 
     public String getUrl() {
