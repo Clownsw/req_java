@@ -171,7 +171,10 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
         });
 
         if enable_data_byte {
-            data_byte = resp.bytes().unwrap();
+            data_byte = match resp.bytes() {
+                Ok(v) => v,
+                Err(e) => e.to_string().into(),
+            }
         } else {
             resp_body = match resp.text() {
                 Ok(v) => v,
