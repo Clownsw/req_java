@@ -156,7 +156,7 @@ pub fn parse_hash_map(env: &JNIEnv, map: &JObject) -> Option<HashMap<String, Str
 /// HashMap to HeaderMap
 ///
 pub fn hash_map_to_header_map(map: HashMap<String, String>) -> HeaderMap {
-    let mut m = HeaderMap::new();
+    let mut m = HeaderMap::with_capacity(map.len());
 
     for item in map.iter() {
         m.insert(
@@ -170,12 +170,12 @@ pub fn hash_map_to_header_map(map: HashMap<String, String>) -> HeaderMap {
 
 pub fn version_to_str(version: Version) -> String {
     match version {
-        Version::HTTP_09 => "HTTP_0.9".to_string(),
-        Version::HTTP_10 => "HTTP_1.0".to_string(),
-        Version::HTTP_11 => "HTTP_1.1".to_string(),
-        Version::HTTP_2 => "HTTP_2".to_string(),
-        Version::HTTP_3 => "HTTP_3".to_string(),
-        _ => String::new(),
+        Version::HTTP_09 => "HTTP/0.9".to_string(),
+        Version::HTTP_10 => "HTTP/1.0".to_string(),
+        Version::HTTP_11 => "HTTP/1.1".to_string(),
+        Version::HTTP_2 => "HTTP/2".to_string(),
+        Version::HTTP_3 => "HTTP/3".to_string(),
+        _ => String::from("unknown"),
     }
 }
 
