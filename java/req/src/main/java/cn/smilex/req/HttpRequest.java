@@ -18,6 +18,7 @@ public class HttpRequest {
     private long timeOut;
     private int maxRedirect;
     private boolean enableDataByte;
+    private boolean ignoreCertsCheck = false;
 
     private HttpRequest() {
         this.method = 0;
@@ -86,13 +87,18 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest setTimeOut(Duration timeOut) {
+        this.timeOut = timeOut.toMillis();
+        return this;
+    }
+
     public HttpRequest setEnableDataByte(boolean enableDataByte) {
         this.enableDataByte = enableDataByte;
         return this;
     }
 
-    public HttpRequest setTimeOut(Duration timeOut) {
-        this.timeOut = timeOut.toMillis();
+    public HttpRequest setIgnoreCertsCheck(boolean ignoreCertsCheck) {
+        this.ignoreCertsCheck = ignoreCertsCheck;
         return this;
     }
 
@@ -133,5 +139,9 @@ public class HttpRequest {
 
     public boolean isEnableDataByte() {
         return enableDataByte;
+    }
+
+    public boolean isIgnoreCertsCheck() {
+        return ignoreCertsCheck;
     }
 }

@@ -35,7 +35,7 @@ public class D1 {
     public void testRequest2() {
         HttpRequest httpRequest = HttpRequest.build()
                 .setMethod(Requests.REQUEST_METHOD.GET)
-                .setUrl("https://www.smilex.cn/");
+                .setUrl("https://www.baidu.com/");
 //                .setUrl("https://www.baidu.com/");
 
         HttpResponse resp = Requests.requests.request(httpRequest);
@@ -115,5 +115,16 @@ public class D1 {
         System.out.println(httpBodyInterfaceClass.isInstance(byteArrBody));
         System.out.println(httpBodyInterfaceClass.isInstance("test"));
 
+    }
+
+    @Test
+    public void ignoreCertsCheckTest() {
+        final HttpRequest httpRequest = HttpRequest.build()
+                .setUrl("https://192.164.0.117:4433")
+                .setMethod(Requests.REQUEST_METHOD.POST)
+                .setIgnoreCertsCheck(false);
+
+        final HttpResponse httpResponse = Requests.requests.request(httpRequest);
+        System.out.println(httpResponse);
     }
 }

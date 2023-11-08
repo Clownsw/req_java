@@ -35,6 +35,13 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
         .z()
         .unwrap();
 
+    // 忽略证书检查
+    let ignore_certs_check = env
+        .get_field(http_request, "ignoreCertsCheck", util::JAVA_TYPE_BOOLEAN)
+        .unwrap()
+        .z()
+        .unwrap();
+
     // 请求头
     let headers = util::parse_hash_map(
         &env,
@@ -79,6 +86,9 @@ pub extern "system" fn Java_cn_smilex_req_Requests__1request(
     if let Some(v) = headers {
         client_builder = client_builder.default_headers(util::hash_map_to_header_map(v));
     }
+
+    // 忽略证书检查
+    client_builder = client_builder.danger_accept_invalid_certs(ignore_certs_check);
 
     let client = client_builder.build().unwrap();
 

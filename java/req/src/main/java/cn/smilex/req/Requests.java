@@ -17,7 +17,7 @@ public final class Requests {
     private Requests() {
     }
 
-    private static final HashMap<String, String> DEFAULT_HEADER = new HashMap<>();
+    private static final HashMap<String, String> DEFAULT_HEADER = new HashMap<>(2);
     public static Requests requests = new Requests();
 
     static {
@@ -51,11 +51,11 @@ public final class Requests {
     }
 
     public HttpResponse request(@NotNull HttpRequest req) {
-        if (req.getUrl() == null || req.getUrl().isBlank() || req.getMethod() == null) {
+        if (req.getUrl() == null || req.getUrl().isEmpty() || req.getMethod() == null) {
             return null;
         }
 
-        var headers = req.getHeaders();
+        final HashMap<String, String> headers = req.getHeaders();
         headers.put("cookie", RequestUtil.cookiesToStr(req.getCookies()));
 
         HttpResponse response = _request(req);

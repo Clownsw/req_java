@@ -5,9 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1715c0cf-4b95-461d-a6d9-fbe6b3456d40" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/req.iml" beforeDir="false" afterPath="$PROJECT_DIR$/req.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/HttpRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/smilex/req/Requests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/smilex/req/Requests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/cn/smilex/D1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cn/smilex/D1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/request.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/request.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,27 +49,25 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/worker/req_java/java/req",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "MavenSettings"
-  }
-}]]></component>
-  <component name="RunManager" selected="JUnit.D1.HttpBodyClassTest">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+  <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+  </component>
+  <component name="RebelAgentSelection">
+    <selection>jr</selection>
+  </component>
+  <component name="RunManager" selected="JUnit.D1.ignoreCertsCheckTest">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -84,17 +88,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="D1.redirectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="D1.ignoreCertsCheckTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="req" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cn.smilex.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
       <option name="PACKAGE_NAME" value="cn.smilex" />
       <option name="MAIN_CLASS_NAME" value="cn.smilex.D1" />
-      <option name="METHOD_NAME" value="redirectTest" />
+      <option name="METHOD_NAME" value="ignoreCertsCheckTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -148,13 +146,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="JUnit.D1.testRequest2" />
+      <item itemvalue="JUnit.D1.HttpBodyClassTest" />
+      <item itemvalue="JUnit.D1.testDownloadAudio" />
+      <item itemvalue="JUnit.D1.testDownloadImage" />
+      <item itemvalue="JUnit.D1.ignoreCertsCheckTest" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.D1.ignoreCertsCheckTest" />
+        <item itemvalue="JUnit.D1.testRequest2" />
         <item itemvalue="JUnit.D1.HttpBodyClassTest" />
         <item itemvalue="JUnit.D1.testDownloadImage" />
         <item itemvalue="JUnit.D1.testDownloadAudio" />
-        <item itemvalue="JUnit.D1.testRequest2" />
-        <item itemvalue="JUnit.D1.redirectTest" />
       </list>
     </recent_temporary>
   </component>
@@ -211,5 +216,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
